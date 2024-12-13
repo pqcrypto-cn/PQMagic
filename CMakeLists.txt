@@ -102,7 +102,7 @@ endif()
 add_compile_options(
     -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow -fPIC
     -Wpointer-arith -Wa,--noexecstack -fomit-frame-pointer -O3 -mtune=native
-    -march=native
+    -march=native -finline-functions
 )
 
 #################################

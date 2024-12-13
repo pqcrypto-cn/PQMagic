@@ -7,7 +7,29 @@ set(CURRENT_BUILD_DIR ${CMAKE_BINARY_DIR}/kem/ml_kem/std)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_PROJECT_ROOT} ${CMAKE_PROJECT_ROOT}/include ${CMAKE_PROJECT_ROOT}/utils)
 
 # Find all source code.
-file(GLOB ML_KEM_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
+file(GLOB ML_KEM_SOURCES_ORIGIN ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
+set(ML_KEM_SOURCES "")
+foreach(SOURCE_PATH ${ML_KEM_SOURCES_ORIGIN})
+    # Only check if the file name contains any keyword, ignore the file path.
+    string(REGEX REPLACE ".*\\/" "" SOURCE ${SOURCE_PATH})
+    
+    # Check if current file related to shake hash.
+    if(SOURCE MATCHES "shake")
+        # Add it to path only when USE_SHAKE is set.
+        if(USE_SHAKE)
+            list(APPEND ML_KEM_SOURCES ${SOURCE_PATH}) 
+        endif()
+    # Check if current file related to sm3 hash.
+    elseif(SOURCE MATCHES "sm3")
+        # Add it to path only when USE_SM3 is set.
+        if(USE_SM3)
+            list(APPEND ML_KEM_SOURCES ${SOURCE_PATH}) 
+        endif()
+    else()
+        list(APPEND ML_KEM_SOURCES ${SOURCE_PATH}) 
+    endif()
+
+endforeach()
 
 # Compile all mode into static library.
 set(TARGET_STATIC_LIBS "")

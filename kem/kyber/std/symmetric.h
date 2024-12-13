@@ -31,7 +31,7 @@ void shake256_prf(uint8_t *out, size_t outlen, const uint8_t key[KYBER_SYMBYTES]
 
 #else
 
-#include "hash.h"
+#include "sm3_hash.h"
 #include "sm3_extended.h"
 
 #define sm3_prf KYBER_NAMESPACE(_sm3_prf)

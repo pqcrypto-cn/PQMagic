@@ -34,7 +34,7 @@ void shake256_rkprf(uint8_t out[ML_KEM_SSBYTES], const uint8_t key[ML_KEM_SYMBYT
 
 #else
 
-#include "hash.h"
+#include "sm3_hash.h"
 #include "sm3_extended.h"
 
 #define sm3_prf ML_KEM_NAMESPACE(_sm3_prf)

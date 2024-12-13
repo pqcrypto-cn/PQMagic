@@ -33,8 +33,8 @@ else
 	else
 		CFLAGS += -march=native
 	endif
-	HASH_SOURCE = $(SM3_HOME)/x86-64/sm3.c $(SM3_HOME)/sm3_extended.c hash.c
-	HASH_HEADER = $(SM3_HOME)/x86-64/include/sm3.h $(PROJECT_HOME)/include/sm3_extended.h hash.h
+	HASH_SOURCE = $(SM3_HOME)/x86-64/sm3.c $(SM3_HOME)/sm3_extended.c sm3_hash.c
+	HASH_HEADER = $(SM3_HOME)/x86-64/include/sm3.h $(PROJECT_HOME)/include/sm3_extended.h sm3_hash.h
 
 endif
 

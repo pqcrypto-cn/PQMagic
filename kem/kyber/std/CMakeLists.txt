@@ -7,7 +7,29 @@ set(CURRENT_BUILD_DIR ${CMAKE_BINARY_DIR}/kem/kyber/std)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_PROJECT_ROOT} ${CMAKE_PROJECT_ROOT}/include ${CMAKE_PROJECT_ROOT}/utils)
 
 # Find all source code.
-file(GLOB KYBER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
+file(GLOB KYBER_SOURCES_ORIGIN ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
+set(KYBER_SOURCES "")
+foreach(SOURCE_PATH ${KYBER_SOURCES_ORIGIN})
+    # Only check if the file name contains any keyword, ignore the file path.
+    string(REGEX REPLACE ".*\\/" "" SOURCE ${SOURCE_PATH})
+    
+    # Check if current file related to shake hash.
+    if(SOURCE MATCHES "shake")
+        # Add it to path only when USE_SHAKE is set.
+        if(USE_SHAKE)
+            list(APPEND KYBER_SOURCES ${SOURCE_PATH}) 
+        endif()
+    # Check if current file related to sm3 hash.
+    elseif(SOURCE MATCHES "sm3")
+        # Add it to path only when USE_SM3 is set.
+        if(USE_SM3)
+            list(APPEND KYBER_SOURCES ${SOURCE_PATH}) 
+        endif()
+    else()
+        list(APPEND KYBER_SOURCES ${SOURCE_PATH}) 
+    endif()
+
+endforeach()
 
 # Compile all mode into static library.
 set(TARGET_STATIC_LIBS "")
