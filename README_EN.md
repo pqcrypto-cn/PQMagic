@@ -17,7 +17,7 @@ This project is developed and maintained by Professor Yu Yu's team from the [Sha
 | Aigis-sig   |  ✅          |  ✅                  |
 | SPHINCS-Alpha |  ✅          |  ✅                  |
 | Feature     | Cross platform/arch, high compatibility | Customized optimization for x64 (Hygon), ARM (FeiTeng), etc. |
-| Source Code |  Open-sourced in this repo | Please [contact us](#contact-us) for advanced support |
+| Source Code |  Open-sourced in this repo and [gitee](https://gitee.com/pqcrypto/pqmagic) | Please [contact us](#contact-us) for advanced support |
 
 - All algorithms support SM3 hash mode.
 - Kyber and Dilithium are based on [pq-crystals](https://github.com/pq-crystals) and [liboqs](https://github.com/open-quantum-safe/liboqs) project.
@@ -53,6 +53,20 @@ Please refer to our website (https://pqcrypto.dev/benchmarking/) to see more det
 
   - The correctness test binaries (`test_xxxx`) and benchmark binaries (`bench_xxxx`) are still containd in `build/bin` dirctory.
   - The shared/static library files and header files are placed in `/path/to/your/installdir/lib` and `/path/to/your/installdir/include` respectively.
+
+- Select hash function
+
+  - Default use SM3 or using:
+
+    ```bash
+    cmake .. -DUSE_SM3=ON
+    ```
+
+  - Choose SHAKE by using following command:
+  
+    ```bash
+    cmake .. -DUSE_SHAKE=ON
+    ```
 
 - Specify the parameters of algorithms:
 

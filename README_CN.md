@@ -15,7 +15,7 @@
 | Aigis-sig |  ✅          |  ✅                  |
 | SPHINCS-Alpha |  ✅          |  ✅                  |
 | 特性       | 跨平台/架构 高度兼容 | 针对x64（海光）、ARM（飞腾）等定制高性能优化版本 |
-| 源码       | 开源于本仓库 | 请[联系我们](#联系我们)获取进阶版支持 |
+| 源码       | 开源于本仓库及[gitee](https://gitee.com/pqcrypto/pqmagic) | 请[联系我们](#联系我们)获取进阶版支持 |
 
 - 所有算法均支持国密 SM3 哈希模式，符合国密标准。
 - Kyber 和 Dilithium 算法基于 [pq-crystals](https://github.com/pq-crystals) 和 [liboqs](https://github.com/open-quantum-safe/liboqs) 开发。
@@ -51,6 +51,20 @@ PQMagic-std 和 PQMagic-adv 版本的详细测试数据请见官网 https://pqcr
 
   - 此时 `build/bin` 目录下仍然会生成相应算法的正确性测试程序 (`test_xxxx`) 和性能测试程序 (`bench_xxxx`)
   - 动态/静态链接库和头文件会被放置于 `/path/to/your/installdir/` 目录下的 `lib/` 和 `include/` 目录中
+
+- 切换底层 Hash 函数
+
+  - 默认选择的是 SM3，或者可以显式选择：
+
+    ```bash
+    cmake .. -DUSE_SM3=ON
+    ```
+
+  - 切换为 SHAKE
+
+    ```bash
+    cmake .. -DUSE_SHAKE=ON
+    ```
 
 - 指定算法参数：
 
