@@ -16,6 +16,37 @@ if(NOT PQMAGIC_VERSION STREQUAL "std")
 endif()
 message(STATUS "Use PQMagic-${PQMAGIC_VERSION}")
 
+# Check OS platform
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    # Windows
+    # set(LIBRARY_PREFIX "")      
+    message(STATUS "Operating System: ${CMAKE_SYSTEM_NAME}.")
+    set(STATIC_LIB_SUFFIX ".lib")   
+    set(DYNAMIC_LIB_SUFFIX ".dll")  
+    # set(IMPORT_LIB_SUFFIX ".lib")
+    set(COMMAND_AR ${CMAKE_AR})
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # Linux
+    # set(LIBRARY_PREFIX "lib")       
+    message(STATUS "Operating System: ${CMAKE_SYSTEM_NAME}.")
+    set(STATIC_LIB_SUFFIX ".a")     
+    set(DYNAMIC_LIB_SUFFIX ".so")
+    set(COMMAND_AR ${CMAKE_AR})
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    # macOS
+    # set(LIBRARY_PREFIX "lib")       
+    message(STATUS "Operating System: ${CMAKE_SYSTEM_NAME} - macOS")
+    set(STATIC_LIB_SUFFIX ".a")     
+    set(DYNAMIC_LIB_SUFFIX ".dylib")
+    set(COMMAND_AR gar) # need binutils
+else()
+    # Other platform
+    message(WARNING "Platform: ${CMAKE_SYSTEM_NAME} treat like Linux")
+    set(STATIC_LIB_SUFFIX ".a")     
+    set(DYNAMIC_LIB_SUFFIX ".so")
+    set(COMMAND_AR ${CMAKE_AR}) # need binutils
+endif()
+
 # Set default algorithim mode.
 ## KEM
 set(DEFAULT_KYBER_MODES 2 3 4 CACHE STRING "All modes for Kyber algorithm")
@@ -127,8 +158,10 @@ message(STATUS "Installation include path: ${INSTALL_INCLUDE_DIR_ABS}")
 # Add subdir.
 set(SUPPORT_ALG_STATIC_TARGET "")
 set(SUPPORT_ALG_STATIC_TARGET_PATH "")
-set(PQMAGIC_SHARED_LIB_NAME "libpqmagic_${PQMAGIC_VERSION}.so")
-set(PQMAGIC_STATIC_LIB_NAME "libpqmagic_${PQMAGIC_VERSION}.a")
+set(PQMAGIC_SHARED_LIB_NAME "libpqmagic_${PQMAGIC_VERSION}${DYNAMIC_LIB_SUFFIX}")
+set(PQMAGIC_STATIC_LIB_NAME "libpqmagic_${PQMAGIC_VERSION}${STATIC_LIB_SUFFIX}")
+set(SUPPORT_ALG_OBJECT_TARGET "")
+
 add_subdirectory(hash/sm3) # Add sm3
 add_subdirectory(hash/keccak) # Add fips202
 add_subdirectory(utils)
@@ -213,50 +246,87 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
-# Set a custom target for shared library
-add_custom_target(pqmagic_target ALL
-    COMMAND ${CMAKE_C_COMPILER} -shared -o ${PQMAGIC_SHARED_LIB_NAME}
-            -Wl,--whole-archive 
-            ${SUPPORT_ALG_STATIC_TARGET_PATH}
-            $<TARGET_FILE:sm3>
-            $<TARGET_FILE:fips202>
-            $<TARGET_FILE:randombytes>
-            -Wl,--no-whole-archive
-    DEPENDS ${SUPPORT_ALG_STATIC_TARGET} sm3 fips202 randombytes
-    COMMENT "Generating shared library ${PQMAGIC_SHARED_LIB_NAME}"
+# if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+# # set(COMPILE_OPTION_WITH_TARGET_PATH "")
+# # foreach(TARGET_PATH ${SUPPORT_ALG_STATIC_TARGET_PATH})
+# #     list(APPEND COMPILE_OPTION_WITH_TARGET_PATH "-Wl,-force_load ${TARGET_PATH} ")
+# # endforeach()
+# # message(STATUS ${COMPILE_OPTION_WITH_TARGET_PATH})
+# # Set a custom target for shared library
+# add_custom_target(pqmagic_target ALL
+#     COMMAND ${CMAKE_C_COMPILER} -shared -o ${PQMAGIC_SHARED_LIB_NAME}
+#             -Wl,-all_load
+#             ${SUPPORT_ALG_STATIC_TARGET_PATH}
+#             # ${COMPILE_OPTION_WITH_TARGET_PATH}
+#             $<TARGET_FILE:sm3>
+#             $<TARGET_FILE:fips202>
+#             $<TARGET_FILE:randombytes>
+#             -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk  # 指定系统库根路径
+#     DEPENDS ${SUPPORT_ALG_STATIC_TARGET} sm3 fips202 randombytes
+#     COMMENT "Generating shared library ${PQMAGIC_SHARED_LIB_NAME}"
+# )
+
+# else()
+# # Set a custom target for shared library
+# add_custom_target(pqmagic_target ALL
+#     COMMAND ${CMAKE_C_COMPILER} -shared -o ${PQMAGIC_SHARED_LIB_NAME}
+#             -Wl,--whole-archive 
+#             ${SUPPORT_ALG_STATIC_TARGET_PATH}
+#             $<TARGET_FILE:sm3>
+#             $<TARGET_FILE:fips202>
+#             $<TARGET_FILE:randombytes>
+#             -Wl,--no-whole-archive
+#     DEPENDS ${SUPPORT_ALG_STATIC_TARGET} sm3 fips202 randombytes
+#     COMMENT "Generating shared library ${PQMAGIC_SHARED_LIB_NAME}"
+# )
+# endif()
+
+
+# Add all support into on library.
+add_library(pqmagic_target SHARED ${SUPPORT_ALG_OBJECT_TARGET})
+target_link_libraries(pqmagic_target PRIVATE sm3 fips202 randombytes)
+set_target_properties(pqmagic_target PROPERTIES
+    OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"
 )
 
-# sm3 and randombytes target's default path.
-set(SM3_LIB_PATH ${CMAKE_BINARY_DIR}/hash/sm3)
-set(FIPS202_LIB_PATH ${CMAKE_BINARY_DIR}/hash/keccak)
-set(RANDOMBYTES_LIB_PATH ${CMAKE_BINARY_DIR}/utils)
-# Set mri script for archive library combination.
-file(WRITE ${CMAKE_BINARY_DIR}/ar_script.mri "CREATE ${PQMAGIC_STATIC_LIB_NAME}\n")
-foreach(lib_path ${SUPPORT_ALG_STATIC_TARGET_PATH})
-    file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${lib_path}\n")
-endforeach()
-file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${SM3_LIB_PATH}/libsm3.a\n")
-file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${FIPS202_LIB_PATH}/libfips202.a\n")
-file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${RANDOMBYTES_LIB_PATH}/librandombytes.a>\n")
-file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "SAVE\nEND\n")
-
-# Set a custom target for static library
-add_custom_target(pqmagic_static_target ALL
-    COMMAND ${CMAKE_AR} -M < ${CMAKE_BINARY_DIR}/ar_script.mri
-    DEPENDS ${SUPPORT_ALG_STATIC_TARGET} sm3 fips202 randombytes
-    COMMENT "Generating static library CREATE ${PQMAGIC_STATIC_LIB_NAME}\n"
+add_library(pqmagic_static_target STATIC ${SUPPORT_ALG_OBJECT_TARGET})
+target_link_libraries(pqmagic_static_target PRIVATE sm3 fips202 randombytes)
+set_target_properties(pqmagic_static_target PROPERTIES
+    OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"
 )
 
+# # sm3 and randombytes target's default path.
+# set(SM3_LIB_PATH ${CMAKE_BINARY_DIR}/hash/sm3)
+# set(FIPS202_LIB_PATH ${CMAKE_BINARY_DIR}/hash/keccak)
+# set(RANDOMBYTES_LIB_PATH ${CMAKE_BINARY_DIR}/utils)
+# # Set mri script for archive library combination.
+# file(WRITE ${CMAKE_BINARY_DIR}/ar_script.mri "CREATE ${PQMAGIC_STATIC_LIB_NAME}\n")
+# foreach(lib_path ${SUPPORT_ALG_STATIC_TARGET_PATH})
+#     file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${lib_path}\n")
+# endforeach()
+# file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${SM3_LIB_PATH}/libsm3.a\n")
+# file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${FIPS202_LIB_PATH}/libfips202.a\n")
+# file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${RANDOMBYTES_LIB_PATH}/librandombytes.a>\n")
+# file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "SAVE\nEND\n")
 
-add_library(pqmagic SHARED IMPORTED)
-set_target_properties(pqmagic PROPERTIES
-    IMPORTED_LOCATION ${PQMAGIC_SHARED_LIB_NAME}
-)
+# # Set a custom target for static library
+# add_custom_target(pqmagic_static_target ALL
+#     COMMAND ${CMAKE_AR} -M < ${CMAKE_BINARY_DIR}/ar_script.mri
+#     DEPENDS ${SUPPORT_ALG_STATIC_TARGET} sm3 fips202 randombytes
+#     COMMENT "Generating static library CREATE ${PQMAGIC_STATIC_LIB_NAME}\n"
+# )
 
-add_library(pqmagic_static STATIC IMPORTED)
-set_target_properties(pqmagic_static PROPERTIES
-    IMPORTED_LOCATION ${PQMAGIC_STATIC_LIB_NAME}
-)
+
+# add_library(pqmagic SHARED IMPORTED)
+# set_target_properties(pqmagic PROPERTIES
+#     IMPORTED_LOCATION ${PQMAGIC_SHARED_LIB_NAME}
+# )
+
+# add_library(pqmagic_static STATIC IMPORTED)
+# set_target_properties(pqmagic_static PROPERTIES
+#     IMPORTED_LOCATION ${PQMAGIC_STATIC_LIB_NAME}
+# )
 
 # Install lib.
 install(FILES ${CMAKE_BINARY_DIR}/${PQMAGIC_SHARED_LIB_NAME}
@@ -295,7 +365,8 @@ function(add_algorithm_test TARGET_NAME SOURCE_FILE ALG_NAME TYPE MODE)
     endif()
 
     add_executable(${TARGET_NAME} ${SOURCE_FILE})
-    target_link_libraries(${TARGET_NAME} PRIVATE pqmagic)  # use shared lib.
+    # target_link_libraries(${TARGET_NAME} PRIVATE pqmagic)  # use shared lib.
+    target_link_libraries(${TARGET_NAME} PRIVATE pqmagic_target)  # use shared lib.
     add_dependencies(${TARGET_NAME} pqmagic_target)
     set_target_properties(${TARGET_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
@@ -368,7 +439,8 @@ function(add_algorithm_bench TARGET_NAME SOURCE_FILE ALG_NAME TYPE MODE)
                         ${SOURCE_FILE} 
                         ${CMAKE_CURRENT_SOURCE_DIR}/utils/cpucycles.c
                         ${CMAKE_CURRENT_SOURCE_DIR}/utils/speed_print.c)
-    target_link_libraries(${TARGET_NAME} PRIVATE pqmagic_static)  # bench use static lib
+    # target_link_libraries(${TARGET_NAME} PRIVATE pqmagic_static)  # bench use static lib
+    target_link_libraries(${TARGET_NAME} PRIVATE pqmagic_static_target)  # bench use static lib
     add_dependencies(${TARGET_NAME} pqmagic_static_target)
     set_target_properties(${TARGET_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"

@@ -26,80 +26,63 @@ foreach(SOURCE_PATH ${ML_DSA_SOURCES_ORIGIN})
 
 endforeach()
 
-# Compile all mode into static library.
-set(TARGET_STATIC_LIBS "")
-set(TARGET_STATIC_LIBS_PATH "")
+# Compile all mode into objects.
+# Then add static lib for each modes.
+set(TARGET_OBJECTS_ALL "")
 foreach(MODE ${ML_DSA_MODES})
-    # Add static lib.
-    add_library(ml_dsa_static_${MODE} STATIC ${ML_DSA_SOURCES})
+    # Set as object
+    add_library(ml_dsa_objects_${MODE} OBJECT ${ML_DSA_SOURCES}) 
 
     # Set ml_dsa mode.
-    target_compile_definitions(ml_dsa_static_${MODE} PRIVATE ML_DSA_MODE=${MODE})
+    target_compile_definitions(ml_dsa_objects_${MODE} PRIVATE ML_DSA_MODE=${MODE})
     if(USE_SHAKE)
-    target_compile_definitions(ml_dsa_static_${MODE} PRIVATE USE_SHAKE)
+    target_compile_definitions(ml_dsa_objects_${MODE} PRIVATE USE_SHAKE)
     endif()
+
+
+    # Add static lib.
+    add_library(ml_dsa_static_${MODE} STATIC $<TARGET_OBJECTS:ml_dsa_objects_${MODE}>)
     
-    # Recored all modes target except for last one.
-    list(APPEND TARGET_STATIC_LIBS ml_dsa_static_${MODE})
-    set(LIB_PATH $<TARGET_FILE:ml_dsa_static_${MODE}>)
-    list(APPEND TARGET_STATIC_LIBS_PATH ${LIB_PATH})
+    list(APPEND TARGET_OBJECTS_ALL $<TARGET_OBJECTS:ml_dsa_objects_${MODE}>)
+    list(APPEND SUPPORT_ALG_OBJECT_TARGET $<TARGET_OBJECTS:ml_dsa_objects_${MODE}>)
 
 endforeach()
+
+# Pass to parents
+set(SUPPORT_ALG_OBJECT_TARGET ${SUPPORT_ALG_OBJECT_TARGET} PARENT_SCOPE)
 
 # Set custom target output name
-set(SHARED_LIB_NAME "libpqmagic_ml_dsa_std.so")
-set(STATIC_LIB_NAME "libpqmagic_ml_dsa_std.a")
+set(SHARED_LIB_NAME "libpqmagic_ml_dsa_std${DYNAMIC_LIB_SUFFIX}")
+set(STATIC_LIB_NAME "libpqmagic_ml_dsa_std${STATIC_LIB_SUFFIX}")
 
 if(USE_SM3)
-# Set a custom target for shared library
-add_custom_target(ml_dsa_target ALL
-    COMMAND ${CMAKE_C_COMPILER} -shared -o ${CURRENT_BUILD_DIR}/${SHARED_LIB_NAME}
-            -Wl,--whole-archive 
-            ${TARGET_STATIC_LIBS_PATH} 
-            $<TARGET_FILE:sm3> 
-            $<TARGET_FILE:randombytes> 
-            -Wl,--no-whole-archive
-    DEPENDS ${TARGET_STATIC_LIBS} sm3 randombytes
-    COMMENT "Generating shared library ${SHARED_LIB_NAME}"
+# Add shared lib.
+add_library(ml_dsa_target SHARED ${TARGET_OBJECTS_ALL})
+target_link_libraries(ml_dsa_target PRIVATE sm3 randombytes)
+set_target_properties(ml_dsa_target PROPERTIES
+    OUTPUT_NAME "pqmagic_ml_dsa_std"
 )
+# Add static lib.
+add_library(ml_dsa_static_target STATIC ${TARGET_OBJECTS_ALL})
+target_link_libraries(ml_dsa_static_target PRIVATE sm3 randombytes)
+set_target_properties(ml_dsa_static_target PROPERTIES
+    OUTPUT_NAME "pqmagic_ml_dsa_std"
+)
+
 elseif(USE_SHAKE)
-# Set a custom target for shared library
-add_custom_target(ml_dsa_target ALL
-    COMMAND ${CMAKE_C_COMPILER} -shared -o ${CURRENT_BUILD_DIR}/${SHARED_LIB_NAME}
-            -Wl,--whole-archive 
-            ${TARGET_STATIC_LIBS_PATH} 
-            $<TARGET_FILE:fips202> 
-            $<TARGET_FILE:randombytes> 
-            -Wl,--no-whole-archive
-    DEPENDS ${TARGET_STATIC_LIBS} fips202 randombytes
-    COMMENT "Generating shared library ${SHARED_LIB_NAME}"
+# Add shared lib.
+add_library(ml_dsa_target SHARED ${TARGET_OBJECTS_ALL})
+target_link_libraries(ml_dsa_target PRIVATE fips202 randombytes)
+set_target_properties(ml_dsa_target PROPERTIES
+    OUTPUT_NAME "pqmagic_ml_dsa_std"
 )
-else()
-    message(FATAL_ERROR "Choose hash mode by -DUSE_SM3=ON or -DUSE_SHAKE=ON")
-endif()
-
-
-# Set mri script for archive library combination.
-file(WRITE ${CURRENT_BUILD_DIR}/ar_script.mri "CREATE ${STATIC_LIB_NAME}\n")
-foreach(lib ${TARGET_STATIC_LIBS})
-    file(APPEND ${CURRENT_BUILD_DIR}/ar_script.mri "ADDLIB lib${lib}.a\n")
-endforeach()
-file(APPEND ${CURRENT_BUILD_DIR}/ar_script.mri "SAVE\nEND\n")
-
-if(USE_SM3)
-# Set a custom target for static library
-add_custom_target(ml_dsa_static_target ALL
-    COMMAND ${CMAKE_AR} -M < ${CURRENT_BUILD_DIR}/ar_script.mri
-    DEPENDS ${TARGET_STATIC_LIBS} sm3 randombytes
-    COMMENT "Generating static library ${STATIC_LIB_NAME}"
+# Add static lib.
+add_library(ml_dsa_static_target STATIC ${TARGET_OBJECTS_ALL})
+target_link_libraries(ml_dsa_static_target PRIVATE fips202 randombytes)
+set_target_properties(ml_dsa_static_target PROPERTIES
+    OUTPUT_NAME "pqmagic_ml_dsa_std"
 )
-elseif(USE_SHAKE)
-# Set a custom target for static library
-add_custom_target(ml_dsa_static_target ALL
-    COMMAND ${CMAKE_AR} -M < ${CURRENT_BUILD_DIR}/ar_script.mri
-    DEPENDS ${TARGET_STATIC_LIBS} fips202 randombytes
-    COMMENT "Generating static library ${STATIC_LIB_NAME}"
-)
+
 else()
     message(FATAL_ERROR "Choose hash mode by -DUSE_SM3=ON or -DUSE_SHAKE=ON")
 endif()

@@ -23,6 +23,4 @@
 #error "PARAMS must be in {1,2,3,4}"
 #endif
 
-
-
 #endif

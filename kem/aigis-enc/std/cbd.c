@@ -1,6 +1,8 @@
-#include "cbd.h"
-#include <immintrin.h>
 #include<stdio.h>
+#include "cbd.h"
+#if defined(__x86_64__) || defined(_M_X64)
+#include <immintrin.h>
+#endif
 
 #if ETA_S == 1 || ETA_E == 1
 static void cbd1(int16_t  *r, const uint8_t *buf)

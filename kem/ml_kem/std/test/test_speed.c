@@ -176,7 +176,7 @@ void kem_enc_dec_bench(double bench_time) {
   printf("=============================== Finish ============================\n\n");
 }
 
-int main()
+int main(void)
 {
 
   // all_cycle_bench();

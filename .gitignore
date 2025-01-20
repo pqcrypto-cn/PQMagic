@@ -1,2 +1,3 @@
 build
 tmp
+TARGET_STATIC_LIBS_SUFFIX

@@ -42,7 +42,7 @@ static inline uint64_t cpucycles(void) {
     * bits wide and it is attributed with the flag 'cap_user_time_short'
     * is true.
     */
-  asm volatile("mrs %0, cntvct_el0" : "=r" (result));
+  __asm__ volatile("mrs %0, cntvct_el0" : "=r" (result));
 
   return result;
 }

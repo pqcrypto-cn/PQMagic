@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include "polyvec.h"
 #include "reduce.h"
-#include <immintrin.h>
 #include "cbd.h"
 #include "hashkdf.h"
 #include "genmatrix.h"
-
+#if defined(__x86_64__) || defined(_M_X64)
+#include <immintrin.h>
+#endif
 
 extern const uint16_t chac[];
 void polyvec_caddq(polyvec *r)

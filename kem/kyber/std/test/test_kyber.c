@@ -47,7 +47,7 @@ random_ml_kem_test(void) {
 }
 
 int
-main()
+main(void)
 {
     int ret = random_ml_kem_test();
 

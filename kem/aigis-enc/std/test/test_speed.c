@@ -119,7 +119,7 @@ void kem_enc_dec_bench(double bench_time) {
 }
 
 
-int main()
+int main(void)
 {
 
   core_alg_cycle_bench();
