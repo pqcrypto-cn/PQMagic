@@ -1,6 +1,6 @@
 # PQMagic
 
-[PQMagic](https://pqcrypto.dev/) (Post-Quantum Magic) is the first **high-performance post-quantum cryptographic algorithm library** that supports both the [FIPS 203 204 205](https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved) standards in China, and it supports the higher performance PQC algorithms designed by us: **Aigis-Enc、Aigis-Sig** ([PKC 2020]((https://eprint.iacr.org/2019/510))) and **SPHINCS-Alpha** ([CRYPTO 2023](https://eprint.iacr.org/2022/059)).
+[PQMagic](https://pqcrypto.dev/) (Post-Quantum Magic) is the first **high-performance post-quantum cryptographic algorithm library** that supports both the [FIPS 203 204 205](https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved) standards in China, and it supports the higher performance PQC algorithms designed by us: **Aigis-Enc、Aigis-Sig** ([PKC 2020]((https://eprint.iacr.org/2019/510))) and **SPHINCS-Alpha** ([CRYPTO 2023](https://eprint.iacr.org/2022/059)). PQMagic has implemented cryptographic modifications to the **Hash Function Components** of all algorithms, better aligning with Chinese standards while seamlessly integrating with international standards.
 
 This project is developed and maintained by Professor Yu Yu's team from the [Shanghai Jiao Tong University](https://crypto.sjtu.edu.cn/lab/) and the [Shanghai Qi Zhi Institute]((https://sqz.ac.cn/password-48)). It aims to provide secure and **high-performance** PQC algorithms, offers solutions for post-quantum cryptography migration in various scenarios.
 
@@ -19,11 +19,27 @@ This project is developed and maintained by Professor Yu Yu's team from the [Sha
 | Feature     | Cross platform/arch, high compatibility | Customized optimization for x64 (Hygon), ARM (FeiTeng), etc. |
 | Source Code |  Open-sourced in this repo and [gitee](https://gitee.com/pqcrypto/pqmagic) | Please [contact us](#contact-us) for advanced support |
 
-- All algorithms support SM3 hash mode.
+- All algorithms support both SM3 hash mode and SHAKE hash mode.
 - Kyber and Dilithium are based on [pq-crystals](https://github.com/pq-crystals) and [liboqs](https://github.com/open-quantum-safe/liboqs) project.
 - SLH-DSA is based on [SPHINCS+](https://github.com/sphincs/sphincsplus)
 
 ## Benchmark
+
+PQMagic outperforms the current leading open-source implementation, liboqs, with approximately a **2x improvement** in performance.
+
+### Platform
+  
+  | Platform | CPU               | OS        |
+  |:--------:|:-----------------:|:---------:|
+  | X86      | AMD Ryzen 5 9600x  | Debian 12 |
+
+### ML-DSA-87
+
+  ![ML-DSA-87](figure/PQMagic-performance-ml-dsa-87.png)
+  
+### ML-KEM-1024
+
+  ![ML-KEM-1024](figure/PQMagic-performance-ml-kem-1024.png)
 
 Please refer to our website (https://pqcrypto.dev/benchmarking/) to see more details about performance of PQMagic-std and PQMagic-adv.
 
@@ -48,7 +64,7 @@ Please refer to our website (https://pqcrypto.dev/benchmarking/) to see more det
 - Specify the install dir:
   
   ```bash
-  cmake .. --install-prefix=/path/to/your/installdir
+  cmake -DCMAKE_INSTALL_PREFIX=/path/to/your/installdir ..
   ```
 
   - The correctness test binaries (`test_xxxx`) and benchmark binaries (`bench_xxxx`) are still containd in `build/bin` dirctory.

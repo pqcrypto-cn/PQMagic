@@ -1,6 +1,6 @@
 # PQMagic
 
-[PQMagic](https://pqcrypto.dev/)（Post-Quantum Magic）是国内首个支持 [FIPS 203 204 205 标准](https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved) 的**高性能安全后量子密码算法库**，并支持性能更高效的**国产自研** PQC 算法 **Aigis-Enc、Aigis-Sig**（[PKC 2020]((https://eprint.iacr.org/2019/510))）和 **SPHINCS-Alpha**（[CRYPTO 2023](https://eprint.iacr.org/2022/059)）。 该项目由郁昱教授团队（[上海交通大学](https://crypto.sjtu.edu.cn/lab/) 、[上海期智研究院](https://sqz.ac.cn/password-48)）开发和维护，旨在提供自主、可控、安全、高性能的 PQC 算法，以及为后量子密码迁移工作提供解决方案。
+[PQMagic](https://pqcrypto.dev/)（Post-Quantum Magic）是国内首个支持 [FIPS 203 204 205 标准](https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved) 的**高性能安全后量子密码算法库**，并支持性能更高效的**国产自研** PQC 算法 **Aigis-Enc、Aigis-Sig**（[PKC 2020]((https://eprint.iacr.org/2019/510))）和 **SPHINCS-Alpha**（[CRYPTO 2023](https://eprint.iacr.org/2022/059)）。同时 PQMagic 对所有算法的底层哈希函数进行国密改造，更好地满足国内标准需求，同时也与国际标准无缝衔接，做到了完全自主可控。。 该项目由郁昱教授团队（[上海交通大学](https://crypto.sjtu.edu.cn/lab/) 、[上海期智研究院](https://sqz.ac.cn/password-48)）开发和维护，旨在提供自主、可控、安全、高性能的 PQC 算法，以及为后量子密码迁移工作提供解决方案。
 
 ## PQMagic 版本
 
@@ -15,15 +15,31 @@
 | Aigis-sig |  ✅          |  ✅                  |
 | SPHINCS-Alpha |  ✅          |  ✅                  |
 | 特性       | 跨平台/架构 高度兼容 | 针对x64（海光）、ARM（飞腾）等定制高性能优化版本 |
-| 源码       | 开源于本仓库及[gitee](https://gitee.com/pqcrypto/pqmagic) | 请[联系我们](#联系我们)获取进阶版支持 |
+| 源码       | 开源于本仓库及[Gitee](https://gitee.com/pqcrypto/pqmagic) | 请[联系我们](#联系我们)获取进阶版支持 |
 
-- 所有算法均支持国密 SM3 哈希模式，符合国密标准。
+- 所有算法均支持国密 SM3 哈希模式，符合国密标准；同时也支持 SHAKE 哈希模式，于国际标准无缝衔接。
 - Kyber 和 Dilithium 算法基于 [pq-crystals](https://github.com/pq-crystals) 和 [liboqs](https://github.com/open-quantum-safe/liboqs) 开发。
 - SLH-DSA 算法基于 [SPHINCS+](https://github.com/sphincs/sphincsplus) 开发。
 
 ## 性能测试
 
-PQMagic-std 和 PQMagic-adv 版本的详细测试数据请见官网 https://pqcrypto.dev/benchmarking/
+PQMagic 性能领先于当前最优开源实现 liboqs，**提高2倍**左右。
+
+### 测试平台
+  
+  | Platform | CPU               | OS        |
+  |:--------:|:-----------------:|:---------:|
+  | X86      | AMD Ryzen 5 9600x  | Debian 12 |
+
+### ML-DSA-87
+
+  ![ML-DSA-87](figure/PQMagic-performance-ml-dsa-87.png)
+  
+### ML-KEM-1024
+
+  ![ML-KEM-1024](figure/PQMagic-performance-ml-kem-1024.png)
+
+PQMagic-std 和 PQMagic-adv 版本的其余详细测试数据请见官网 https://pqcrypto.dev/benchmarkings/pqmagic/
 
 ## 编译使用
 
@@ -46,7 +62,7 @@ PQMagic-std 和 PQMagic-adv 版本的详细测试数据请见官网 https://pqcr
 - 指定 install 目录：
   
   ```bash
-  cmake .. --install-prefix=/path/to/your/installdir
+  cmake -DCMAKE_INSTALL_PREFIX=/path/to/your/installdir ..
   ```
 
   - 此时 `build/bin` 目录下仍然会生成相应算法的正确性测试程序 (`test_xxxx`) 和性能测试程序 (`bench_xxxx`)
