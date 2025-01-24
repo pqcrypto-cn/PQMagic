@@ -6,7 +6,7 @@
 #include "symmetric.h"
 #include "verify.h"
 #include "indcpa.h"
-
+#include "pqmagic_config.h"
 #include "utils/randombytes.h"
 
 /*************************************************
@@ -23,7 +23,7 @@
 *                (an already allocated array filled with 2*KYBER_SYMBYTES random bytes)
 * Returns 0 (success)
 **************************************************/
-int crypto_kem_keypair_internal(unsigned char *pk, 
+PQMAGIC_EXPORT int crypto_kem_keypair_internal(unsigned char *pk, 
                                 unsigned char *sk,
                                 const unsigned char *coins)
 {
@@ -48,7 +48,7 @@ int crypto_kem_keypair_internal(unsigned char *pk,
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_kem_keypair(unsigned char *pk, unsigned char *sk)
+PQMAGIC_EXPORT int crypto_kem_keypair(unsigned char *pk, unsigned char *sk)
 {
   unsigned char coins[2*ML_KEM_SYMBYTES];
   randombytes(coins, 2*ML_KEM_SYMBYTES);
@@ -72,7 +72,7 @@ int crypto_kem_keypair(unsigned char *pk, unsigned char *sk)
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_kem_enc_internal(unsigned char *ct,
+PQMAGIC_EXPORT int crypto_kem_enc_internal(unsigned char *ct,
                             unsigned char *ss,
                             const unsigned char *pk,
                             const unsigned char *coins)
@@ -110,7 +110,7 @@ int crypto_kem_enc_internal(unsigned char *ct,
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_kem_enc(unsigned char *ct,
+PQMAGIC_EXPORT int crypto_kem_enc(unsigned char *ct,
                    unsigned char *ss,
                    const unsigned char *pk)
 {
@@ -138,7 +138,7 @@ int crypto_kem_enc(unsigned char *ct,
 *
 * On failure, ss will contain a pseudo-random value.
 **************************************************/
-int crypto_kem_dec(unsigned char *ss,
+PQMAGIC_EXPORT int crypto_kem_dec(unsigned char *ss,
                    const unsigned char *ct,
                    const unsigned char *sk)
 {

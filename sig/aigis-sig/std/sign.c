@@ -7,6 +7,7 @@
 #include "polyvec.h"
 #include "poly.h"
 #include "sign.h"
+#include "pqmagic_config.h"
 #include "utils/randombytes.h"
 #ifdef USE_SHAKE
 #include "hash/keccak/fips202.h"
@@ -16,7 +17,7 @@
 #endif
 
 /*generate the public matrix from a seed*/
-void expand_mat(polyvecl mat[PARAM_K], const unsigned char rho[SEEDBYTES]) {
+PQMAGIC_EXPORT void expand_mat(polyvecl mat[PARAM_K], const unsigned char rho[SEEDBYTES]) {
   unsigned int i, j, pos, ctr;
   unsigned char inbuf[SEEDBYTES + 2];
 #if QBITS == 21
@@ -96,7 +97,7 @@ void expand_mat(polyvecl mat[PARAM_K], const unsigned char rho[SEEDBYTES]) {
 }
 
 /*generate the the challenge c*/
-void challenge(poly *c,
+PQMAGIC_EXPORT void challenge(poly *c,
                const unsigned char mu[CRHBYTES],
                const polyveck *w1) 
 {
@@ -173,7 +174,7 @@ void challenge(poly *c,
 * where pk = rho|t1
 *       sk = rho|key|hash(pk)|s1|s2|t0
 **************************************************/
-int crypto_sign_keypair_internal(
+PQMAGIC_EXPORT int crypto_sign_keypair_internal(
   unsigned char *pk, 
   unsigned char *sk,
   const unsigned char *coins)
@@ -236,7 +237,7 @@ int crypto_sign_keypair_internal(
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
+PQMAGIC_EXPORT int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
 
   unsigned char coins[SEEDBYTES];
   randombytes(coins, SEEDBYTES);
@@ -260,7 +261,7 @@ int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
 * create a signature sm on message m, where 
 * sm = z|h|c
 **************************************************/
-int crypto_sign_signature_internal(
+PQMAGIC_EXPORT int crypto_sign_signature_internal(
   unsigned char *sig, 
   unsigned long long *siglen, 
   const unsigned char *m, 
@@ -375,7 +376,7 @@ int crypto_sign_signature_internal(
 *
 * Returns 0 (success), -1 (context string too long error)
 **************************************************/
-int crypto_sign_signature(unsigned char *sig,
+PQMAGIC_EXPORT int crypto_sign_signature(unsigned char *sig,
                           unsigned long long *siglen,
                           const unsigned char *m,
                           unsigned long long mlen,
@@ -427,7 +428,7 @@ int crypto_sign_signature(unsigned char *sig,
 *
 * Returns 0 (success), -1 (context string too long error)
 **************************************************/
-int crypto_sign(unsigned char *sm,
+PQMAGIC_EXPORT int crypto_sign(unsigned char *sm,
                 unsigned long long *smlen,
                 const unsigned char *m,
                 unsigned long long mlen,
@@ -457,7 +458,7 @@ int crypto_sign(unsigned char *sm,
 *
 * Returns 0 if signature could be verified correctly and -1 otherwise
 **************************************************/
-int crypto_sign_verify_internal(
+PQMAGIC_EXPORT int crypto_sign_verify_internal(
   const unsigned char *sig, unsigned long long siglen,
   const unsigned char *m, unsigned long long mlen,
   const unsigned char *pk)
@@ -539,7 +540,7 @@ int crypto_sign_verify_internal(
 *
 * Returns 0 if signature could be verified correctly and -1 otherwise
 **************************************************/
-int crypto_sign_verify(const unsigned char *sig,
+PQMAGIC_EXPORT int crypto_sign_verify(const unsigned char *sig,
                        unsigned long long siglen,
                        const unsigned char *m,
                        unsigned long long mlen,
@@ -582,7 +583,7 @@ int crypto_sign_verify(const unsigned char *sig,
 *
 * Returns 0 if signed message could be verified correctly and -1 otherwise
 **************************************************/
-int crypto_sign_open(unsigned char *m,
+PQMAGIC_EXPORT int crypto_sign_open(unsigned char *m,
                      unsigned long long *mlen,
                      const unsigned char *sm,
                      unsigned long long smlen,

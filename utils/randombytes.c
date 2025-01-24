@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "randombytes.h"
-
+#include "pqmagic_config.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -19,7 +19,7 @@
 #endif
 
 #if defined(_WIN32) || defined(_WIN64)
-void randombytes(uint8_t *out, size_t outlen) {
+PQMAGIC_EXPORT void randombytes(uint8_t *out, size_t outlen) {
   HCRYPTPROV ctx;
   DWORD len;
 
@@ -39,7 +39,7 @@ void randombytes(uint8_t *out, size_t outlen) {
     abort();
 }
 #elif defined(__linux__) && defined(SYS_getrandom)
-void randombytes(uint8_t *out, size_t outlen) {
+PQMAGIC_EXPORT void randombytes(uint8_t *out, size_t outlen) {
   ssize_t ret;
 
   while(outlen > 0) {
@@ -54,7 +54,7 @@ void randombytes(uint8_t *out, size_t outlen) {
   }
 }
 #else
-void randombytes(uint8_t *out, size_t outlen) {
+PQMAGIC_EXPORT void randombytes(uint8_t *out, size_t outlen) {
   static int fd = -1;
   ssize_t ret;
 

@@ -150,22 +150,42 @@ endforeach()
 set(SUPPORT_ALG_OBJECT_TARGET ${SUPPORT_ALG_OBJECT_TARGET} PARENT_SCOPE)
 
 # Set custom target output name
-set(SHARED_LIB_NAME "libpqmagic_sphincs_a_std${DYNAMIC_LIB_SUFFIX}")
-set(STATIC_LIB_NAME "libpqmagic_sphincs_a_std${STATIC_LIB_SUFFIX}")
+set(SHARED_LIB_NAME "${LIBRARY_PREFIX}pqmagic_sphincs_a_std${DYNAMIC_LIB_SUFFIX}")
+set(STATIC_LIB_NAME "${LIBRARY_PREFIX}pqmagic_sphincs_a_std${STATIC_LIB_SUFFIX}")
 
 # Add shared lib.
 add_library(sphincs_a_target SHARED ${TARGET_OBJECTS_ALL})
 target_link_libraries(sphincs_a_target PRIVATE sm3 fips202 randombytes)
-set_target_properties(sphincs_a_target PROPERTIES
-    OUTPUT_NAME "pqmagic_sphincs_a_std"
-)
 
 # Add static lib.
 add_library(sphincs_a_static_target STATIC ${TARGET_OBJECTS_ALL})
 target_link_libraries(sphincs_a_static_target PRIVATE sm3 fips202 randombytes)
-set_target_properties(sphincs_a_static_target PROPERTIES
-    OUTPUT_NAME "pqmagic_sphincs_a_std"
-)
+
+# Set library name.
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    # Windows has different rules.
+    # shared：*.dll + *.lib（import library）
+    # static：*.lib
+    set_target_properties(sphincs_a_target PROPERTIES
+        OUTPUT_NAME "pqmagic_sphincs_a_std"                     # DLL and import
+        RUNTIME_OUTPUT_NAME "pqmagic_sphincs_a_std"             # DLL：*.dll
+        ARCHIVE_OUTPUT_NAME "pqmagic_sphincs_a_std_import"      # import lib：*_import.lib
+    )
+    set_target_properties(sphincs_a_static_target PROPERTIES
+        OUTPUT_NAME "pqmagic_sphincs_a_std"              # static：*.lib
+    )
+else()
+    # Unix-like（macOS/Linux）
+    # shared：lib*.so/lib*.dylib
+    # static：lib*.a
+    set_target_properties(sphincs_a_target PROPERTIES
+        OUTPUT_NAME "pqmagic_sphincs_a_std"
+    )
+    set_target_properties(sphincs_a_static_target PROPERTIES
+        OUTPUT_NAME "pqmagic_sphincs_a_std"
+    )
+endif()
+
 # Install lib.
 install(FILES ${CURRENT_BUILD_DIR}/${SHARED_LIB_NAME}
     DESTINATION ${INSTALL_LIB_DIR})

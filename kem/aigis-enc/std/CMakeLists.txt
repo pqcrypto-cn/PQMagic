@@ -51,39 +51,52 @@ endforeach()
 set(SUPPORT_ALG_OBJECT_TARGET ${SUPPORT_ALG_OBJECT_TARGET} PARENT_SCOPE)
 
 # Set custom target output name
-set(SHARED_LIB_NAME "libpqmagic_aigis_enc_std${DYNAMIC_LIB_SUFFIX}")
-set(STATIC_LIB_NAME "libpqmagic_aigis_enc_std${STATIC_LIB_SUFFIX}")
+set(SHARED_LIB_NAME "${LIBRARY_PREFIX}pqmagic_aigis_enc_std${DYNAMIC_LIB_SUFFIX}")
+set(STATIC_LIB_NAME "${LIBRARY_PREFIX}pqmagic_aigis_enc_std${STATIC_LIB_SUFFIX}")
 
 if(USE_SM3)
-# Add shared lib.
-add_library(aigis_enc_target SHARED ${TARGET_OBJECTS_ALL})
-target_link_libraries(aigis_enc_target PRIVATE sm3 randombytes)
-set_target_properties(aigis_enc_target PROPERTIES
-    OUTPUT_NAME "pqmagic_aigis_enc_std"
-)
-# Add static lib.
-add_library(aigis_enc_static_target STATIC ${TARGET_OBJECTS_ALL})
-target_link_libraries(aigis_enc_static_target PRIVATE sm3 randombytes)
-set_target_properties(aigis_enc_static_target PROPERTIES
-    OUTPUT_NAME "pqmagic_aigis_enc_std"
-)
+    # Add shared lib.
+    add_library(aigis_enc_target SHARED ${TARGET_OBJECTS_ALL})
+    target_link_libraries(aigis_enc_target PRIVATE sm3 randombytes)
 
+    # Add static lib.
+    add_library(aigis_enc_static_target STATIC ${TARGET_OBJECTS_ALL})
+    target_link_libraries(aigis_enc_static_target PRIVATE sm3 randombytes)
 elseif(USE_SHAKE)
-# Add shared lib.
-add_library(aigis_enc_target SHARED ${TARGET_OBJECTS_ALL})
-target_link_libraries(aigis_enc_target PRIVATE fips202 randombytes)
-set_target_properties(aigis_enc_target PROPERTIES
-    OUTPUT_NAME "pqmagic_aigis_enc_std"
-)
-# Add static lib.
-add_library(aigis_enc_static_target STATIC ${TARGET_OBJECTS_ALL})
-target_link_libraries(aigis_enc_static_target PRIVATE fips202 randombytes)
-set_target_properties(aigis_enc_static_target PROPERTIES
-    OUTPUT_NAME "pqmagic_aigis_enc_std"
-)
+    # Add shared lib.
+    add_library(aigis_enc_target SHARED ${TARGET_OBJECTS_ALL})
+    target_link_libraries(aigis_enc_target PRIVATE fips202 randombytes)
 
+    # Add static lib.
+    add_library(aigis_enc_static_target STATIC ${TARGET_OBJECTS_ALL})
+    target_link_libraries(aigis_enc_static_target PRIVATE fips202 randombytes)
 else()
     message(FATAL_ERROR "Choose hash mode by -DUSE_SM3=ON or -DUSE_SHAKE=ON")
+endif()
+
+# Set library name.
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    # Windows has different rules.
+    # shared：*.dll + *.lib（import library）
+    # static：*.lib
+    set_target_properties(aigis_enc_target PROPERTIES
+        OUTPUT_NAME "pqmagic_aigis_enc_std"                     # DLL and import
+        RUNTIME_OUTPUT_NAME "pqmagic_aigis_enc_std"             # DLL：*.dll
+        ARCHIVE_OUTPUT_NAME "pqmagic_aigis_enc_std_import"      # import lib：*_import.lib
+    )
+    set_target_properties(aigis_enc_static_target PROPERTIES
+        OUTPUT_NAME "pqmagic_aigis_enc_std"              # static：*.lib
+    )
+else()
+    # Unix-like（macOS/Linux）
+    # shared：lib*.so/lib*.dylib
+    # static：lib*.a
+    set_target_properties(aigis_enc_target PROPERTIES
+        OUTPUT_NAME "pqmagic_aigis_enc_std"
+    )
+    set_target_properties(aigis_enc_static_target PROPERTIES
+        OUTPUT_NAME "pqmagic_aigis_enc_std"
+    )
 endif()
 
 # Install lib.

@@ -19,7 +19,7 @@ message(STATUS "Use PQMagic-${PQMAGIC_VERSION}")
 # Check OS platform
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Windows
-    # set(LIBRARY_PREFIX "")      
+    set(LIBRARY_PREFIX "")
     message(STATUS "Operating System: ${CMAKE_SYSTEM_NAME}.")
     set(STATIC_LIB_SUFFIX ".lib")   
     set(DYNAMIC_LIB_SUFFIX ".dll")  
@@ -27,20 +27,21 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(COMMAND_AR ${CMAKE_AR})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # Linux
-    # set(LIBRARY_PREFIX "lib")       
+    set(LIBRARY_PREFIX "lib") 
     message(STATUS "Operating System: ${CMAKE_SYSTEM_NAME}.")
     set(STATIC_LIB_SUFFIX ".a")     
     set(DYNAMIC_LIB_SUFFIX ".so")
     set(COMMAND_AR ${CMAKE_AR})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     # macOS
-    # set(LIBRARY_PREFIX "lib")       
+    set(LIBRARY_PREFIX "lib")    
     message(STATUS "Operating System: ${CMAKE_SYSTEM_NAME} - macOS")
     set(STATIC_LIB_SUFFIX ".a")     
     set(DYNAMIC_LIB_SUFFIX ".dylib")
     set(COMMAND_AR gar) # need binutils
 else()
     # Other platform
+    set(LIBRARY_PREFIX "lib")
     message(WARNING "Platform: ${CMAKE_SYSTEM_NAME} treat like Linux")
     set(STATIC_LIB_SUFFIX ".a")     
     set(DYNAMIC_LIB_SUFFIX ".so")
@@ -129,12 +130,21 @@ elseif(USE_SHAKE)
 message(STATUS "Hash Component: SHAKE")
 endif()
 
-# Set global compile options
-add_compile_options(
-    -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow -fPIC
-    -Wpointer-arith -Wa,--noexecstack -fomit-frame-pointer -O3 -mtune=native
-    -march=native -finline-functions
-)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    # Set global compile options
+    add_compile_options(
+        -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow
+        -Wpointer-arith -Wa,--noexecstack -fomit-frame-pointer -O3 -mtune=native
+        -march=native -finline-functions
+    )
+else()
+    # Set global compile options
+    add_compile_options(
+        -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow -fPIC
+        -Wpointer-arith -Wa,--noexecstack -fomit-frame-pointer -O3 -mtune=native
+        -march=native -finline-functions
+    )
+endif()
 
 #################################
 # Project library build setting #
@@ -156,10 +166,11 @@ message(STATUS "Installation library path: ${INSTALL_LIB_DIR_ABS}")
 message(STATUS "Installation include path: ${INSTALL_INCLUDE_DIR_ABS}")
 
 # Add subdir.
-set(SUPPORT_ALG_STATIC_TARGET "")
-set(SUPPORT_ALG_STATIC_TARGET_PATH "")
-set(PQMAGIC_SHARED_LIB_NAME "libpqmagic_${PQMAGIC_VERSION}${DYNAMIC_LIB_SUFFIX}")
-set(PQMAGIC_STATIC_LIB_NAME "libpqmagic_${PQMAGIC_VERSION}${STATIC_LIB_SUFFIX}")
+set(PQMAGIC_SHARED_LIB_NAME "${LIBRARY_PREFIX}pqmagic_${PQMAGIC_VERSION}${DYNAMIC_LIB_SUFFIX}")
+set(PQMAGIC_STATIC_LIB_NAME "${LIBRARY_PREFIX}pqmagic_${PQMAGIC_VERSION}${STATIC_LIB_SUFFIX}")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+set(PQMAGIC_SHARED_LIB_IMPORT_NAME "${LIBRARY_PREFIX}pqmagic_${PQMAGIC_VERSION}_import${STATIC_LIB_SUFFIX}")
+endif()
 set(SUPPORT_ALG_OBJECT_TARGET "")
 
 add_subdirectory(hash/sm3) # Add sm3
@@ -169,27 +180,18 @@ add_subdirectory(utils)
 if(ENABLE_KYBER)
     message(STATUS "KYBER: ENABLED with mode ${KYBER_MODES}")
     add_subdirectory(kem/kyber/${PQMAGIC_VERSION})
-    # Record target name and path.
-    list(APPEND SUPPORT_ALG_STATIC_TARGET kyber_static_target)
-    list(APPEND SUPPORT_ALG_STATIC_TARGET_PATH "${CMAKE_BINARY_DIR}/kem/kyber/${PQMAGIC_VERSION}/libpqmagic_kyber_${PQMAGIC_VERSION}.a")
 else()
     message(STATUS "KYBER: DISABLED")
 endif()
 if(ENABLE_ML_KEM)
     message(STATUS "ML-KEM (FIPS 203): ENABLED with mode ${ML_KEM_MODES}")
     add_subdirectory(kem/ml_kem/${PQMAGIC_VERSION})
-    # Record target name and path.
-    list(APPEND SUPPORT_ALG_STATIC_TARGET ml_kem_static_target)
-    list(APPEND SUPPORT_ALG_STATIC_TARGET_PATH "${CMAKE_BINARY_DIR}/kem/ml_kem/${PQMAGIC_VERSION}/libpqmagic_ml_kem_${PQMAGIC_VERSION}.a")
 else()
     message(STATUS "ML-KEM (FIPS 203): DISABLED")
 endif()
 if(ENABLE_AIGIS_ENC)
     message(STATUS "AIGIS-ENC: ENABLED with mode ${AIGIS_ENC_MODES}")
     add_subdirectory(kem/aigis-enc/${PQMAGIC_VERSION})
-    # Record target name and path.
-    list(APPEND SUPPORT_ALG_STATIC_TARGET aigis_enc_static_target)
-    list(APPEND SUPPORT_ALG_STATIC_TARGET_PATH "${CMAKE_BINARY_DIR}/kem/aigis-enc/${PQMAGIC_VERSION}/libpqmagic_aigis_enc_${PQMAGIC_VERSION}.a")
 else()
     message(STATUS "AIGIS-ENC: DISABLED")
 endif()
@@ -197,45 +199,30 @@ endif()
 if(ENABLE_DILITHIUM)
     message(STATUS "DILITHIUM: ENABLED with mode ${DILITHIUM_MODES}")
     add_subdirectory(sig/dilithium/${PQMAGIC_VERSION})
-    # Record target name and path.
-    list(APPEND SUPPORT_ALG_STATIC_TARGET dilithium_static_target)
-    list(APPEND SUPPORT_ALG_STATIC_TARGET_PATH "${CMAKE_BINARY_DIR}/sig/dilithium/${PQMAGIC_VERSION}/libpqmagic_dilithium_${PQMAGIC_VERSION}.a")
 else()
     message(STATUS "DILITHIUM: DISABLED")
 endif()
 if(ENABLE_ML_DSA)
     message(STATUS "ML-DSA (FIPS 204): ENABLED with mode ${ML_DSA_MODES}")
     add_subdirectory(sig/ml_dsa/${PQMAGIC_VERSION})
-    # Record target name and path.
-    list(APPEND SUPPORT_ALG_STATIC_TARGET ml_dsa_static_target)
-    list(APPEND SUPPORT_ALG_STATIC_TARGET_PATH "${CMAKE_BINARY_DIR}/sig/ml_dsa/${PQMAGIC_VERSION}/libpqmagic_ml_dsa_${PQMAGIC_VERSION}.a")
 else()
     message(STATUS "ML-DSA (FIPS 204): DISABLED")
 endif()
 if(ENABLE_AIGIS_SIG)
     message(STATUS "AIGIS_SIG: ENABLED with mode ${AIGIS_SIG_MODES}")
     add_subdirectory(sig/aigis-sig/${PQMAGIC_VERSION})
-    # Record target name and path.
-    list(APPEND SUPPORT_ALG_STATIC_TARGET aigis_sig_static_target)
-    list(APPEND SUPPORT_ALG_STATIC_TARGET_PATH "${CMAKE_BINARY_DIR}/sig/aigis-sig/${PQMAGIC_VERSION}/libpqmagic_aigis_sig_${PQMAGIC_VERSION}.a")
 else()
     message(STATUS "AIGIS_SIG: DISABLED")
 endif()
 if(ENABLE_SLH_DSA)
     message(STATUS "SLH-DSA (FIPS 205): ENABLED with mode ${SLH_DSA_MODES}")
     add_subdirectory(sig/slh_dsa/${PQMAGIC_VERSION})
-    # Record target name and path.
-    list(APPEND SUPPORT_ALG_STATIC_TARGET slh_dsa_static_target)
-    list(APPEND SUPPORT_ALG_STATIC_TARGET_PATH "${CMAKE_BINARY_DIR}/sig/slh_dsa/${PQMAGIC_VERSION}/libpqmagic_slh_dsa_${PQMAGIC_VERSION}.a")
 else()
     message(STATUS "SLH_DSA (FIPS 205): DISABLED")
 endif()
 if(ENABLE_SPHINCS_A)
     message(STATUS "SPHINCS-Alpha: ENABLED with mode ${SPHINCS_A_MODES}")
     add_subdirectory(sig/sphincs-a/${PQMAGIC_VERSION})
-    # Record target name and path.
-    list(APPEND SUPPORT_ALG_STATIC_TARGET sphincs_a_static_target)
-    list(APPEND SUPPORT_ALG_STATIC_TARGET_PATH "${CMAKE_BINARY_DIR}/sig/sphincs-a/${PQMAGIC_VERSION}/libpqmagic_sphincs_a_${PQMAGIC_VERSION}.a")
 else()
     message(STATUS "SPHINCS-Alpha: DISABLED")
 endif()
@@ -246,102 +233,64 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
-# if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
-# # set(COMPILE_OPTION_WITH_TARGET_PATH "")
-# # foreach(TARGET_PATH ${SUPPORT_ALG_STATIC_TARGET_PATH})
-# #     list(APPEND COMPILE_OPTION_WITH_TARGET_PATH "-Wl,-force_load ${TARGET_PATH} ")
-# # endforeach()
-# # message(STATUS ${COMPILE_OPTION_WITH_TARGET_PATH})
-# # Set a custom target for shared library
-# add_custom_target(pqmagic_target ALL
-#     COMMAND ${CMAKE_C_COMPILER} -shared -o ${PQMAGIC_SHARED_LIB_NAME}
-#             -Wl,-all_load
-#             ${SUPPORT_ALG_STATIC_TARGET_PATH}
-#             # ${COMPILE_OPTION_WITH_TARGET_PATH}
-#             $<TARGET_FILE:sm3>
-#             $<TARGET_FILE:fips202>
-#             $<TARGET_FILE:randombytes>
-#             -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk  # 指定系统库根路径
-#     DEPENDS ${SUPPORT_ALG_STATIC_TARGET} sm3 fips202 randombytes
-#     COMMENT "Generating shared library ${PQMAGIC_SHARED_LIB_NAME}"
-# )
-
-# else()
-# # Set a custom target for shared library
-# add_custom_target(pqmagic_target ALL
-#     COMMAND ${CMAKE_C_COMPILER} -shared -o ${PQMAGIC_SHARED_LIB_NAME}
-#             -Wl,--whole-archive 
-#             ${SUPPORT_ALG_STATIC_TARGET_PATH}
-#             $<TARGET_FILE:sm3>
-#             $<TARGET_FILE:fips202>
-#             $<TARGET_FILE:randombytes>
-#             -Wl,--no-whole-archive
-#     DEPENDS ${SUPPORT_ALG_STATIC_TARGET} sm3 fips202 randombytes
-#     COMMENT "Generating shared library ${PQMAGIC_SHARED_LIB_NAME}"
-# )
-# endif()
-
-
 # Add all support into on library.
 add_library(pqmagic_target SHARED ${SUPPORT_ALG_OBJECT_TARGET})
 target_link_libraries(pqmagic_target PRIVATE sm3 fips202 randombytes)
-set_target_properties(pqmagic_target PROPERTIES
-    OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"
-)
 
 add_library(pqmagic_static_target STATIC ${SUPPORT_ALG_OBJECT_TARGET})
 target_link_libraries(pqmagic_static_target PRIVATE sm3 fips202 randombytes)
-set_target_properties(pqmagic_static_target PROPERTIES
-    OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"
-)
 
-# # sm3 and randombytes target's default path.
-# set(SM3_LIB_PATH ${CMAKE_BINARY_DIR}/hash/sm3)
-# set(FIPS202_LIB_PATH ${CMAKE_BINARY_DIR}/hash/keccak)
-# set(RANDOMBYTES_LIB_PATH ${CMAKE_BINARY_DIR}/utils)
-# # Set mri script for archive library combination.
-# file(WRITE ${CMAKE_BINARY_DIR}/ar_script.mri "CREATE ${PQMAGIC_STATIC_LIB_NAME}\n")
-# foreach(lib_path ${SUPPORT_ALG_STATIC_TARGET_PATH})
-#     file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${lib_path}\n")
-# endforeach()
-# file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${SM3_LIB_PATH}/libsm3.a\n")
-# file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${FIPS202_LIB_PATH}/libfips202.a\n")
-# file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "ADDLIB ${RANDOMBYTES_LIB_PATH}/librandombytes.a>\n")
-# file(APPEND ${CMAKE_BINARY_DIR}/ar_script.mri "SAVE\nEND\n")
-
-# # Set a custom target for static library
-# add_custom_target(pqmagic_static_target ALL
-#     COMMAND ${CMAKE_AR} -M < ${CMAKE_BINARY_DIR}/ar_script.mri
-#     DEPENDS ${SUPPORT_ALG_STATIC_TARGET} sm3 fips202 randombytes
-#     COMMENT "Generating static library CREATE ${PQMAGIC_STATIC_LIB_NAME}\n"
-# )
-
-
-# add_library(pqmagic SHARED IMPORTED)
-# set_target_properties(pqmagic PROPERTIES
-#     IMPORTED_LOCATION ${PQMAGIC_SHARED_LIB_NAME}
-# )
-
-# add_library(pqmagic_static STATIC IMPORTED)
-# set_target_properties(pqmagic_static PROPERTIES
-#     IMPORTED_LOCATION ${PQMAGIC_STATIC_LIB_NAME}
-# )
+# Set library name.
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    # Windows has different rules.
+    # shared：pqmagic.dll + pqmagic.lib（import library）
+    # static：pqmagic_static.lib
+    set_target_properties(pqmagic_target PROPERTIES
+        OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"                     # DLL and import
+        RUNTIME_OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"             # DLL：pqmagic.dll
+        ARCHIVE_OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}_import"      # import lib：pqmagic_import.lib
+    )
+    set_target_properties(pqmagic_static_target PROPERTIES
+        OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"              # static：pqmagic_static.lib
+    )
+else()
+    # Unix-like (macOS/Linux)
+    # shared：libpqmagic.so/libpqmagic.dylib
+    # static：libpqmagic_static.a
+    set_target_properties(pqmagic_target PROPERTIES
+        OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"
+    )
+    set_target_properties(pqmagic_static_target PROPERTIES
+        OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"
+    )
+endif()
 
 # Install lib.
 install(FILES ${CMAKE_BINARY_DIR}/${PQMAGIC_SHARED_LIB_NAME}
     DESTINATION ${INSTALL_LIB_DIR})
 install(FILES ${CMAKE_BINARY_DIR}/${PQMAGIC_STATIC_LIB_NAME}
     DESTINATION ${INSTALL_LIB_DIR})
+
 # Custom install all executable target.
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 install(CODE 
     "
     message(STATUS \"Create soft link library for: ${INSTALL_LIB_DIR}/${PQMAGIC_STATIC_LIB_NAME}\")
-    execute_process(COMMAND ln -s ${INSTALL_LIB_DIR}/${PQMAGIC_STATIC_LIB_NAME} ${INSTALL_LIB_DIR}/libpqmagic.a)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${INSTALL_LIB_DIR}/${PQMAGIC_STATIC_LIB_NAME} ${INSTALL_LIB_DIR}/${LIBRARY_PREFIX}pqmagic${STATIC_LIB_SUFFIX})
     message(STATUS \"Create soft link library for: ${INSTALL_LIB_DIR}/${PQMAGIC_SHARED_LIB_NAME}\")
-    execute_process(COMMAND ln -s ${INSTALL_LIB_DIR}/${PQMAGIC_SHARED_LIB_NAME} ${INSTALL_LIB_DIR}/libpqmagic.so)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${INSTALL_LIB_DIR}/${PQMAGIC_SHARED_LIB_NAME} ${INSTALL_LIB_DIR}/${LIBRARY_PREFIX}pqmagic${DYNAMIC_LIB_SUFFIX})
     "
 )
+else()
+install(CODE 
+    "
+    message(STATUS \"Create soft link library for: ${INSTALL_LIB_DIR}/${PQMAGIC_STATIC_LIB_NAME}\")
+    execute_process(COMMAND ln -s ${INSTALL_LIB_DIR}/${PQMAGIC_STATIC_LIB_NAME} ${INSTALL_LIB_DIR}/${LIBRARY_PREFIX}pqmagic${STATIC_LIB_SUFFIX})
+    message(STATUS \"Create soft link library for: ${INSTALL_LIB_DIR}/${PQMAGIC_SHARED_LIB_NAME}\")
+    execute_process(COMMAND ln -s ${INSTALL_LIB_DIR}/${PQMAGIC_SHARED_LIB_NAME} ${INSTALL_LIB_DIR}/${LIBRARY_PREFIX}pqmagic${DYNAMIC_LIB_SUFFIX})
+    "
+)
+endif()
 
 ###########################
 # Add test binary for alg #
@@ -777,6 +726,19 @@ if(ENABLE_SPHINCS_A)
 endif()
 
 # Custom install all executable target.
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+install(CODE 
+    "
+    if(NOT EXISTS ${INSTALL_BIN_DIR})
+        file(MAKE_DIRECTORY ${INSTALL_BIN_DIR})
+    endif()
+    foreach(EXE_TARGET ${ALL_EXECUTABLE_TARGET})
+       message(STATUS \"Installing: ${INSTALL_BIN_DIR}/\${EXE_TARGET}\")
+       execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/\${EXE_TARGET}${CMAKE_EXECUTABLE_SUFFIX} ${INSTALL_BIN_DIR}/\${EXE_TARGET})
+    endforeach()
+    "
+)
+else()
 install(CODE 
     "
     if(NOT EXISTS ${INSTALL_BIN_DIR})
@@ -788,6 +750,7 @@ install(CODE
     endforeach()
     "
 )
+endif()
 
 # Install pqmagic api
 install(FILES include/pqmagic_api.h DESTINATION ${INSTALL_INCLUDE_DIR})

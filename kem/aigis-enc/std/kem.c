@@ -4,10 +4,11 @@
 #include "verify.h"
 #include "owcpa.h"
 #include "hashkdf.h"
+#include "pqmagic_config.h"
 #include "utils/randombytes.h"
 
 
-int crypto_kem_keypair_internal(
+PQMAGIC_EXPORT int crypto_kem_keypair_internal(
   unsigned char *pk, 
   unsigned char *sk,
   const unsigned char *coins)
@@ -34,14 +35,14 @@ int crypto_kem_keypair_internal(
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_kem_keypair(unsigned char *pk, unsigned char *sk)
+PQMAGIC_EXPORT int crypto_kem_keypair(unsigned char *pk, unsigned char *sk)
 {
   unsigned char coins[2*SEED_BYTES];
   randombytes(coins, 2*SEED_BYTES);
   return crypto_kem_keypair_internal(pk, sk, coins);
 }
 
-int crypto_kem_enc_internal(
+PQMAGIC_EXPORT int crypto_kem_enc_internal(
   unsigned char *ct, 
   unsigned char *ss, 
   const unsigned char *pk,
@@ -82,7 +83,7 @@ int crypto_kem_enc_internal(
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_kem_enc(unsigned char *ct,
+PQMAGIC_EXPORT int crypto_kem_enc(unsigned char *ct,
                    unsigned char *ss,
                    const unsigned char *pk)
 {
@@ -109,7 +110,7 @@ int crypto_kem_enc(unsigned char *ct,
 *
 * On failure, ss will contain a pseudo-random value.
 **************************************************/
-int crypto_kem_dec(
+PQMAGIC_EXPORT int crypto_kem_dec(
   unsigned char *ss, 
   const unsigned char *ct, 
   const unsigned char *sk)

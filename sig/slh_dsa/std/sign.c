@@ -12,6 +12,7 @@
 #include "randombytes.h"
 #include "utils.h"
 #include "merkle.h"
+#include "pqmagic_config.h"
 
 /*
  * Returns the length of a secret key, in bytes
@@ -50,7 +51,7 @@ unsigned long long crypto_sign_seedbytes(void)
  * Format sk: [SK_SEED || SK_PRF || PUB_SEED || root]
  * Format pk: [PUB_SEED || root]
  */
-int crypto_sign_seed_keypair(unsigned char *pk, unsigned char *sk,
+PQMAGIC_EXPORT int crypto_sign_seed_keypair(unsigned char *pk, unsigned char *sk,
                              const unsigned char *seed)
 {
     spx_ctx ctx;
@@ -80,7 +81,7 @@ int crypto_sign_seed_keypair(unsigned char *pk, unsigned char *sk,
  * Format sk: [SK_SEED || SK_PRF || PUB_SEED || root]
  * Format pk: [PUB_SEED || root]
  */
-int crypto_sign_keypair(unsigned char *pk, unsigned char *sk)
+PQMAGIC_EXPORT int crypto_sign_keypair(unsigned char *pk, unsigned char *sk)
 {
   unsigned char seed[CRYPTO_SEEDBYTES];
   randombytes(seed, CRYPTO_SEEDBYTES);
@@ -92,7 +93,7 @@ int crypto_sign_keypair(unsigned char *pk, unsigned char *sk)
 /**
  * Returns an array containing a detached signature.
  */
-int crypto_sign_signature(uint8_t *sig, size_t *siglen,
+PQMAGIC_EXPORT int crypto_sign_signature(uint8_t *sig, size_t *siglen,
                           const uint8_t *m, size_t mlen, const uint8_t *sk)
 {
     spx_ctx ctx;
@@ -160,7 +161,7 @@ int crypto_sign_signature(uint8_t *sig, size_t *siglen,
 /**
  * Verifies a detached signature and message under a given public key.
  */
-int crypto_sign_verify(const uint8_t *sig, size_t siglen,
+PQMAGIC_EXPORT int crypto_sign_verify(const uint8_t *sig, size_t siglen,
                        const uint8_t *m, size_t mlen, const uint8_t *pk)
 {
     spx_ctx ctx;
@@ -243,7 +244,7 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen,
 /**
  * Returns an array containing the signature followed by the message.
  */
-int crypto_sign(unsigned char *sm, unsigned long long *smlen,
+PQMAGIC_EXPORT int crypto_sign(unsigned char *sm, unsigned long long *smlen,
                 const unsigned char *m, unsigned long long mlen,
                 const unsigned char *sk)
 {
@@ -260,7 +261,7 @@ int crypto_sign(unsigned char *sm, unsigned long long *smlen,
 /**
  * Verifies a given signature-message pair under a given public key.
  */
-int crypto_sign_open(unsigned char *m, unsigned long long *mlen,
+PQMAGIC_EXPORT int crypto_sign_open(unsigned char *m, unsigned long long *mlen,
                      const unsigned char *sm, unsigned long long smlen,
                      const unsigned char *pk)
 {

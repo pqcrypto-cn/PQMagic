@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
+set(CMAKE_PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+# Include headers.
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_PROJECT_ROOT}/include)
+
 # Include headers.
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

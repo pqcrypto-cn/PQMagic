@@ -7,6 +7,7 @@
 #include "polyvec.h"
 #include "poly.h"
 #include "symmetric.h"
+#include "pqmagic_config.h"
 #include "utils/randombytes.h"
 #ifndef USE_SHAKE
 #include "include/sm3_extended.h"
@@ -25,7 +26,7 @@
 *                             (of length SEEDBYTES bytes) 
 * Returns 0 (success)
 **************************************************/
-int crypto_sign_keypair_internal(
+PQMAGIC_EXPORT int crypto_sign_keypair_internal(
   uint8_t *pk, 
   uint8_t *sk,
   const uint8_t *coins) 
@@ -92,7 +93,7 @@ int crypto_sign_keypair_internal(
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
+PQMAGIC_EXPORT int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
 
   unsigned char coins[SEEDBYTES];
   randombytes(coins, SEEDBYTES);
@@ -112,7 +113,7 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_sign_signature_internal(
+PQMAGIC_EXPORT int crypto_sign_signature_internal(
   uint8_t *sig,
   size_t *siglen,
   const uint8_t *m,
@@ -253,7 +254,7 @@ rej:
 *
 * Returns 0 (success), -1 (context string too long error)
 **************************************************/
-int crypto_sign_signature(uint8_t *sig,
+PQMAGIC_EXPORT int crypto_sign_signature(uint8_t *sig,
                           size_t *siglen,
                           const uint8_t *m,
                           size_t mlen,
@@ -284,7 +285,7 @@ int crypto_sign_signature(uint8_t *sig,
 *
 * Returns 0 (success)
 **************************************************/
-int crypto_sign(uint8_t *sm,
+PQMAGIC_EXPORT int crypto_sign(uint8_t *sm,
                 size_t *smlen,
                 const uint8_t *m,
                 size_t mlen,
@@ -312,7 +313,7 @@ int crypto_sign(uint8_t *sm,
 *
 * Returns 0 if signature could be verified correctly and -1 otherwise
 **************************************************/
-int crypto_sign_verify(
+PQMAGIC_EXPORT int crypto_sign_verify(
   const uint8_t *sig,
   size_t siglen,
   const uint8_t *m,
@@ -440,7 +441,7 @@ int crypto_sign_verify(
 *
 * Returns 0 if signed message could be verified correctly and -1 otherwise
 **************************************************/
-int crypto_sign_open(uint8_t *m,
+PQMAGIC_EXPORT int crypto_sign_open(uint8_t *m,
                      size_t *mlen,
                      const uint8_t *sm,
                      size_t smlen,
