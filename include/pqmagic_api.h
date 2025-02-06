@@ -12,137 +12,117 @@
 #define ML_DSA_44_SECRETKEYBYTES   2560
 #define ML_DSA_44_SIGBYTES         2420
 
-int pqmagic_ml_dsa_44_std_keypair_internal(uint8_t *pk, 
-                                        uint8_t *sk,
-                                        const uint8_t *coins);
+
 // return 0 if success, or return error code (neg number).
 int pqmagic_ml_dsa_44_std_keypair(unsigned char *pk, unsigned char *sk);
 
-int pqmagic_ml_dsa_44_std_signature_internal(uint8_t *sig, size_t *siglen,
-                                            const uint8_t *m, size_t mlen,
-                                            const uint8_t *coins,
-                                            const uint8_t *sk);
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_ml_dsa_44_std_signature(unsigned char *sm, size_t *smlen, 
-                                    const unsigned char *m, size_t mlen, 
-                                    const unsigned char *sk);
+int pqmagic_ml_dsa_44_std_signature(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
 
-int pqmagic_ml_dsa_44_std_verify_internal(const uint8_t *sig,
-                                        size_t siglen,
-                                        const uint8_t *m,
-                                        size_t mlen,
-                                        const uint8_t *pk);
-// return 0/1 if verification failed/success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_ml_dsa_44_std_verify(const uint8_t *sig, size_t siglen,
-                                const uint8_t *m, size_t mlen,
-                                const uint8_t *ctx, size_t ctx_len,
-                                const uint8_t *pk);
+// return 0 if verification success, or return error code (neg number).
+int pqmagic_ml_dsa_44_std_verify(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
 
+// return 0 if success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_ml_dsa_44_std(uint8_t *sm, size_t *smlen,
-                        const uint8_t *m, size_t mlen,
-                        const uint8_t *ctx, size_t ctx_len,
-                        const uint8_t *sk);
+int pqmagic_ml_dsa_44_std(
+    unsigned char *sm, size_t *smlen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
+// return 0 if verification success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_ml_dsa_44_std_open(uint8_t *m, size_t *mlen,
-                            const uint8_t *sm, size_t smlen,
-                            const uint8_t *ctx, size_t ctx_len,
-                            const uint8_t *pk);
+int pqmagic_ml_dsa_44_std_open(
+    unsigned char *m, size_t *mlen,
+    const unsigned char *sm, size_t smlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
 
 #define ML_DSA_65_PUBLICKEYBYTES   1952
 #define ML_DSA_65_SECRETKEYBYTES   4032
 #define ML_DSA_65_SIGBYTES         3309
 
-int pqmagic_ml_dsa_65_std_keypair_internal(uint8_t *pk, 
-                                        uint8_t *sk,
-                                        const uint8_t *coins);
 // return 0 if success, or return error code (neg number).
 int pqmagic_ml_dsa_65_std_keypair(unsigned char *pk, unsigned char *sk);
 
-int pqmagic_ml_dsa_65_std_signature_internal(uint8_t *sig, size_t *siglen,
-                                            const uint8_t *m, size_t mlen,
-                                            const uint8_t *coins,
-                                            const uint8_t *sk);
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_ml_dsa_65_std_signature(unsigned char *sm, size_t *smlen, 
-                                    const unsigned char *m, size_t mlen, 
-                                    const unsigned char *sk);
+int pqmagic_ml_dsa_65_std_signature(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
 
-int pqmagic_ml_dsa_65_std_verify_internal(const uint8_t *sig,
-                                        size_t siglen,
-                                        const uint8_t *m,
-                                        size_t mlen,
-                                        const uint8_t *pk);
-// return 0/1 if verification failed/success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_ml_dsa_65_std_verify(const uint8_t *sig, size_t siglen,
-                                const uint8_t *m, size_t mlen,
-                                const uint8_t *ctx, size_t ctx_len,
-                                const uint8_t *pk);
+// return 0 if verification success, or return error code (neg number).
+int pqmagic_ml_dsa_65_std_verify(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
 
+// return 0 if success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_ml_dsa_65_std(uint8_t *sm, size_t *smlen,
-                        const uint8_t *m, size_t mlen,
-                        const uint8_t *ctx, size_t ctx_len,
-                        const uint8_t *sk);
+int pqmagic_ml_dsa_65_std(
+    unsigned char *sm, size_t *smlen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
+// return 0 if verification success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_ml_dsa_65_std_open(uint8_t *m, size_t *mlen,
-                            const uint8_t *sm, size_t smlen,
-                            const uint8_t *ctx, size_t ctx_len,
-                            const uint8_t *pk);
+int pqmagic_ml_dsa_65_std_open(
+    unsigned char *m, size_t *mlen,
+    const unsigned char *sm, size_t smlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
 
 
 #define ML_DSA_87_PUBLICKEYBYTES   2592
 #define ML_DSA_87_SECRETKEYBYTES   4896
 #define ML_DSA_87_SIGBYTES         4627
 
-int pqmagic_ml_dsa_87_std_keypair_internal(uint8_t *pk, 
-                                 uint8_t *sk,
-                                 const uint8_t *coins);
 // return 0 if success, or return error code (neg number).
 int pqmagic_ml_dsa_87_std_keypair(unsigned char *pk, unsigned char *sk);
 
-int pqmagic_ml_dsa_87_std_signature_internal(uint8_t *sig, size_t *siglen,
-                                            const uint8_t *m, size_t mlen,
-                                            const uint8_t *coins,
-                                            const uint8_t *sk);
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_ml_dsa_87_std_signature(unsigned char *sm, size_t *smlen, 
-                                    const unsigned char *m, size_t mlen, 
-                                    const unsigned char *sk);
+int pqmagic_ml_dsa_87_std_signature(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
 
-int pqmagic_ml_dsa_87_std_verify_internal(const uint8_t *sig,
-                                        size_t siglen,
-                                        const uint8_t *m,
-                                        size_t mlen,
-                                        const uint8_t *pk);
-// return 0/1 if verification failed/success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_ml_dsa_87_std_verify(const uint8_t *sig, size_t siglen,
-                                const uint8_t *m, size_t mlen,
-                                const uint8_t *ctx, size_t ctx_len,
-                                const uint8_t *pk);
+// return 0 if verification success, or return error code (neg number).
+int pqmagic_ml_dsa_87_std_verify(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
 
+// return 0 if success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_ml_dsa_87_std(uint8_t *sm, size_t *smlen,
-                        const uint8_t *m, size_t mlen,
-                        const uint8_t *ctx, size_t ctx_len,
-                        const uint8_t *sk);
+int pqmagic_ml_dsa_87_std(
+    unsigned char *sm, size_t *smlen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
+// return 0 if verification success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_ml_dsa_87_std_open(uint8_t *m, size_t *mlen,
-                            const uint8_t *sm, size_t smlen,
-                            const uint8_t *ctx, size_t ctx_len,
-                            const uint8_t *pk);
+int pqmagic_ml_dsa_87_std_open(
+    unsigned char *m, size_t *mlen,
+    const unsigned char *sm, size_t smlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
 
 /*
     ML-DSA API END
@@ -591,14 +571,36 @@ int pqmagic_slh_dsa_sm3_128s_simple_std_sign_open(unsigned char *m, size_t *mlen
 int pqmagic_aigis_sig1_std_keypair(unsigned char *pk, unsigned char *sk);
 
 // return 0 if success, or return error code (neg number).
-int pqmagic_aigis_sig1_std_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_aigis_sig1_std_signature(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
 
-// return 0/1 if verification failed/success, or return error code (neg number).
-int pqmagic_aigis_sig1_std_verify(const unsigned char *sm, size_t smlen,
-                                  const unsigned char *m, size_t mlen,
-                                  const unsigned char *pk);
+// return 0 if verification success, or return error code (neg number).
+int pqmagic_aigis_sig1_std_verify(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
+
+// return 0 if success, or return error code (neg number).
+// sm pointer to output signed message 
+// (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
+int pqmagic_aigis_sig1_std(
+    unsigned char *sm, size_t *smlen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
+
+// return 0 if verification success, or return error code (neg number).
+// sm pointer to output signed message 
+// (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
+int pqmagic_aigis_sig1_std_open(
+    unsigned char *m, size_t *mlen,
+    const unsigned char *sm, size_t smlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
 
 #define AIGIS_SIG2_PUBLICKEYBYTES   1312
 #define AIGIS_SIG2_SECRETKEYBYTES   3376
@@ -608,14 +610,36 @@ int pqmagic_aigis_sig1_std_verify(const unsigned char *sm, size_t smlen,
 int pqmagic_aigis_sig2_std_keypair(unsigned char *pk, unsigned char *sk);
 
 // return 0 if success, or return error code (neg number).
-int pqmagic_aigis_sig2_std_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_aigis_sig2_std_signature(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
 
-// return 0/1 if verification failed/success, or return error code (neg number).
-int pqmagic_aigis_sig2_std_verify(const unsigned char *sm, size_t smlen,
-                                  const unsigned char *m, size_t mlen,
-                                  const unsigned char *pk);
+// return 0 if verification success, or return error code (neg number).
+int pqmagic_aigis_sig2_std_verify(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
+
+// return 0 if success, or return error code (neg number).
+// sm pointer to output signed message 
+// (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
+int pqmagic_aigis_sig2_std(
+    unsigned char *sm, size_t *smlen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
+
+// return 0 if verification success, or return error code (neg number).
+// sm pointer to output signed message 
+// (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
+int pqmagic_aigis_sig2_std_open(
+    unsigned char *m, size_t *mlen,
+    const unsigned char *sm, size_t smlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
 
 #define AIGIS_SIG3_PUBLICKEYBYTES   1568
 #define AIGIS_SIG3_SECRETKEYBYTES   3888
@@ -625,14 +649,36 @@ int pqmagic_aigis_sig2_std_verify(const unsigned char *sm, size_t smlen,
 int pqmagic_aigis_sig3_std_keypair(unsigned char *pk, unsigned char *sk);
 
 // return 0 if success, or return error code (neg number).
-int pqmagic_aigis_sig3_std_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_aigis_sig3_std_signature(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
 
-// return 0/1 if verification failed/success, or return error code (neg number).
-int pqmagic_aigis_sig3_std_verify(const unsigned char *sm, size_t smlen,
-                                  const unsigned char *m, size_t mlen,
-                                  const unsigned char *pk);
+// return 0 if verification success, or return error code (neg number).
+int pqmagic_aigis_sig3_std_verify(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
+
+// return 0 if success, or return error code (neg number).
+// sm pointer to output signed message 
+// (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
+int pqmagic_aigis_sig3_std(
+    unsigned char *sm, size_t *smlen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
+
+// return 0 if verification success, or return error code (neg number).
+// sm pointer to output signed message 
+// (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
+int pqmagic_aigis_sig3_std_open(
+    unsigned char *m, size_t *mlen,
+    const unsigned char *sm, size_t smlen,
+    const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
 
 /*
     AIGIS_SIG API END
@@ -651,26 +697,30 @@ int pqmagic_aigis_sig3_std_verify(const unsigned char *sm, size_t smlen,
 int pqmagic_dilithium2_std_keypair(unsigned char *pk, unsigned char *sk);
 
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_dilithium2_std_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
-// return 0/1 if verification failed/success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_dilithium2_std_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+int pqmagic_dilithium2_std_signature(
+    unsigned char *sig, size_t *siglen, 
+    const unsigned char *m, size_t mlen, 
+    const unsigned char *sk);
+// return 0 if verification success, or return error code (neg number).
+int pqmagic_dilithium2_std_verify(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *pk);
 
+// return 0 if success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_dilithium2_std(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
+int pqmagic_dilithium2_std(
+    unsigned char *sm, size_t *smlen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *sk);
+// return 0 if verification success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_dilithium2_std_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+int pqmagic_dilithium2_std_open(
+    unsigned char *m, size_t *mlen,
+    const unsigned char *sm, size_t smlen,
+    const unsigned char *pk);
 
 #define DILITHIUM3_PUBLICKEYBYTES   1952
 #define DILITHIUM3_SECRETKEYBYTES   4000
@@ -680,26 +730,30 @@ int pqmagic_dilithium2_std_open(unsigned char *m, size_t *mlen,
 int pqmagic_dilithium3_std_keypair(unsigned char *pk, unsigned char *sk);
 
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_dilithium3_std_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
-// return 0/1 if verification failed/success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_dilithium3_std_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+int pqmagic_dilithium3_std_signature(
+    unsigned char *sig, size_t *siglen, 
+    const unsigned char *m, size_t mlen, 
+    const unsigned char *sk);
+// return 0 if verification success, or return error code (neg number).
+int pqmagic_dilithium3_std_verify(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *pk);
 
+// return 0 if success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_dilithium3_std(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
+int pqmagic_dilithium3_std(
+    unsigned char *sm, size_t *smlen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *sk);
+// return 0 if verification success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_dilithium3_std_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+int pqmagic_dilithium3_std_open(
+    unsigned char *m, size_t *mlen,
+    const unsigned char *sm, size_t smlen,
+    const unsigned char *pk);
 
 
 #define DILITHIUM5_PUBLICKEYBYTES   2592
@@ -710,26 +764,30 @@ int pqmagic_dilithium3_std_open(unsigned char *m, size_t *mlen,
 int pqmagic_dilithium5_std_keypair(unsigned char *pk, unsigned char *sk);
 
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_dilithium5_std_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
-// return 0/1 if verification failed/success, or return error code (neg number).
-// sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_dilithium5_std_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+int pqmagic_dilithium5_std_signature(
+    unsigned char *sig, size_t *siglen, 
+    const unsigned char *m, size_t mlen, 
+    const unsigned char *sk);
+// return 0 if verification success, or return error code (neg number).
+int pqmagic_dilithium5_std_verify(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *pk);
 
+// return 0 if success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_dilithium5_std(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
+int pqmagic_dilithium5_std(
+    unsigned char *sm, size_t *smlen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *sk);
+// return 0 if verification success, or return error code (neg number).
 // sm pointer to output signed message 
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
-int pqmagic_dilithium5_std_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+int pqmagic_dilithium5_std_open(
+    unsigned char *m, size_t *mlen,
+    const unsigned char *sm, size_t smlen,
+    const unsigned char *pk);
 
 /*
     DILITHIUM API END
@@ -1179,60 +1237,51 @@ int pqmagic_sphincs_a_sm3_128s_simple_std_sign_open(unsigned char *m, size_t *ml
 #define ML_KEM_512_CIPHERTEXTBYTES    768
 #define ML_KEM_512_SSBYTES            32
 
-int pqmagic_ml_kem_512_std_keypair_internal(unsigned char *pk, 
-                                unsigned char *sk,
-                                unsigned char *coins);
 int pqmagic_ml_kem_512_std_keypair(unsigned char *pk, unsigned char *sk);
-int pqmagic_ml_kem_512_std_enc_internal(unsigned char *ct,
-                            unsigned char *ss,
-                            const unsigned char *pk,
-                            const unsigned char *coins);
-int pqmagic_ml_kem_512_std_enc(unsigned char *ct,
-                   unsigned char *ss,
-                   const unsigned char *pk);
-int pqmagic_ml_kem_512_std_dec(unsigned char *ss,
-                   const unsigned char *ct,
-                   const unsigned char *sk);
+
+int pqmagic_ml_kem_512_std_enc(
+    unsigned char *ct,
+    unsigned char *ss,
+    const unsigned char *pk);
+
+int pqmagic_ml_kem_512_std_dec(
+    unsigned char *ss,
+    const unsigned char *ct,
+    const unsigned char *sk);
 
 #define ML_KEM_768_PUBLICKEYBYTES     1184
 #define ML_KEM_768_SECRETKEYBYTES     2400
 #define ML_KEM_768_CIPHERTEXTBYTES    1088
 #define ML_KEM_768_SSBYTES            32
 
-int pqmagic_ml_kem_768_std_keypair_internal(unsigned char *pk, 
-                                unsigned char *sk,
-                                unsigned char *coins);
 int pqmagic_ml_kem_768_std_keypair(unsigned char *pk, unsigned char *sk);
-int pqmagic_ml_kem_768_std_enc_internal(unsigned char *ct,
-                            unsigned char *ss,
-                            const unsigned char *pk,
-                            const unsigned char *coins);
-int pqmagic_ml_kem_768_std_enc(unsigned char *ct,
-                   unsigned char *ss,
-                   const unsigned char *pk);
-int pqmagic_ml_kem_768_std_dec(unsigned char *ss,
-                   const unsigned char *ct,
-                   const unsigned char *sk);
+
+int pqmagic_ml_kem_768_std_enc(
+    unsigned char *ct,
+    unsigned char *ss,
+    const unsigned char *pk);
+
+int pqmagic_ml_kem_768_std_dec(
+    unsigned char *ss,
+    const unsigned char *ct,
+    const unsigned char *sk);
 
 #define ML_KEM_1024_PUBLICKEYBYTES     1568
 #define ML_KEM_1024_SECRETKEYBYTES     3168
 #define ML_KEM_1024_CIPHERTEXTBYTES    1568
 #define ML_KEM_1024_SSBYTES            32
 
-int pqmagic_ml_kem_1024_std_keypair_internal(unsigned char *pk, 
-                                unsigned char *sk,
-                                unsigned char *coins);
 int pqmagic_ml_kem_1024_std_keypair(unsigned char *pk, unsigned char *sk);
-int pqmagic_ml_kem_1024_std_enc_internal(unsigned char *ct,
-                            unsigned char *ss,
-                            const unsigned char *pk,
-                            const unsigned char *coins);
-int pqmagic_ml_kem_1024_std_enc(unsigned char *ct,
-                   unsigned char *ss,
-                   const unsigned char *pk);
-int pqmagic_ml_kem_1024_std_dec(unsigned char *ss,
-                   const unsigned char *ct,
-                   const unsigned char *sk);
+
+int pqmagic_ml_kem_1024_std_enc(
+    unsigned char *ct,
+    unsigned char *ss,
+    const unsigned char *pk);
+
+int pqmagic_ml_kem_1024_std_dec(
+    unsigned char *ss,
+    const unsigned char *ct,
+    const unsigned char *sk);
 
 /*
     ML-KEM API END
@@ -1249,12 +1298,16 @@ int pqmagic_ml_kem_1024_std_dec(unsigned char *ss,
 #define KYBER512_SSBYTES            32
 
 int pqmagic_kyber512_std_keypair(unsigned char *pk, unsigned char *sk);
-int pqmagic_kyber512_std_enc(unsigned char *ct,
-                   unsigned char *ss,
-                   const unsigned char *pk);
-int pqmagic_kyber512_std_dec(unsigned char *ss,
-                   const unsigned char *ct,
-                   const unsigned char *sk);
+
+int pqmagic_kyber512_std_enc(
+    unsigned char *ct,
+    unsigned char *ss,
+    const unsigned char *pk);
+
+int pqmagic_kyber512_std_dec(
+    unsigned char *ss,
+    const unsigned char *ct,
+    const unsigned char *sk);
 
 #define KYBER768_PUBLICKEYBYTES     1184
 #define KYBER768_SECRETKEYBYTES     2400
@@ -1262,12 +1315,16 @@ int pqmagic_kyber512_std_dec(unsigned char *ss,
 #define KYBER768_SSBYTES            32
 
 int pqmagic_kyber768_std_keypair(unsigned char *pk, unsigned char *sk);
-int pqmagic_kyber768_std_enc(unsigned char *ct,
-                   unsigned char *ss,
-                   const unsigned char *pk);
-int pqmagic_kyber768_std_dec(unsigned char *ss,
-                   const unsigned char *ct,
-                   const unsigned char *sk);
+
+int pqmagic_kyber768_std_enc(
+    unsigned char *ct,
+    unsigned char *ss,
+    const unsigned char *pk);
+
+int pqmagic_kyber768_std_dec(
+    unsigned char *ss,
+    const unsigned char *ct,
+    const unsigned char *sk);
 
 #define KYBER1024_PUBLICKEYBYTES     1568
 #define KYBER1024_SECRETKEYBYTES     3168
@@ -1275,12 +1332,16 @@ int pqmagic_kyber768_std_dec(unsigned char *ss,
 #define KYBER1024_SSBYTES            32
 
 int pqmagic_kyber1024_std_keypair(unsigned char *pk, unsigned char *sk);
-int pqmagic_kyber1024_std_enc(unsigned char *ct,
-                   unsigned char *ss,
-                   const unsigned char *pk);
-int pqmagic_kyber1024_std_dec(unsigned char *ss,
-                   const unsigned char *ct,
-                   const unsigned char *sk);
+
+int pqmagic_kyber1024_std_enc(
+    unsigned char *ct,
+    unsigned char *ss,
+    const unsigned char *pk);
+
+int pqmagic_kyber1024_std_dec(
+    unsigned char *ss,
+    const unsigned char *ct,
+    const unsigned char *sk);
 
 /*
     KYBER API END
@@ -1296,12 +1357,16 @@ int pqmagic_kyber1024_std_dec(unsigned char *ss,
 #define AIGIS_ENC_1_SSBYTES            32
 
 int pqmagic_aigis_enc_1_std_keypair(unsigned char *pk, unsigned char *sk);
-int pqmagic_aigis_enc_1_std_enc(unsigned char *ct,
-                   unsigned char *ss,
-                   const unsigned char *pk);
-int pqmagic_aigis_enc_1_std_dec(unsigned char *ss,
-                   const unsigned char *ct,
-                   const unsigned char *sk);
+
+int pqmagic_aigis_enc_1_std_enc(
+    unsigned char *ct,
+    unsigned char *ss,
+    const unsigned char *pk);
+
+int pqmagic_aigis_enc_1_std_dec(
+    unsigned char *ss,
+    const unsigned char *ct,
+    const unsigned char *sk);
 
 #define AIGIS_ENC_2_PUBLICKEYBYTES     896
 #define AIGIS_ENC_2_SECRETKEYBYTES     2208
@@ -1309,12 +1374,16 @@ int pqmagic_aigis_enc_1_std_dec(unsigned char *ss,
 #define AIGIS_ENC_2_SSBYTES            32
 
 int pqmagic_aigis_enc_2_std_keypair(unsigned char *pk, unsigned char *sk);
-int pqmagic_aigis_enc_2_std_enc(unsigned char *ct,
-                   unsigned char *ss,
-                   const unsigned char *pk);
-int pqmagic_aigis_enc_2_std_dec(unsigned char *ss,
-                   const unsigned char *ct,
-                   const unsigned char *sk);
+
+int pqmagic_aigis_enc_2_std_enc(
+    unsigned char *ct,
+    unsigned char *ss,
+    const unsigned char *pk);
+
+int pqmagic_aigis_enc_2_std_dec(
+    unsigned char *ss,
+    const unsigned char *ct,
+    const unsigned char *sk);
 
 #define AIGIS_ENC_3_PUBLICKEYBYTES     992
 #define AIGIS_ENC_3_SECRETKEYBYTES     2304
@@ -1322,12 +1391,16 @@ int pqmagic_aigis_enc_2_std_dec(unsigned char *ss,
 #define AIGIS_ENC_3_SSBYTES            32
 
 int pqmagic_aigis_enc_3_std_keypair(unsigned char *pk, unsigned char *sk);
-int pqmagic_aigis_enc_3_std_enc(unsigned char *ct,
-                   unsigned char *ss,
-                   const unsigned char *pk);
-int pqmagic_aigis_enc_3_std_dec(unsigned char *ss,
-                   const unsigned char *ct,
-                   const unsigned char *sk);
+
+int pqmagic_aigis_enc_3_std_enc(
+    unsigned char *ct,
+    unsigned char *ss,
+    const unsigned char *pk);
+
+int pqmagic_aigis_enc_3_std_dec(
+    unsigned char *ss,
+    const unsigned char *ct,
+    const unsigned char *sk);
 
 #define AIGIS_ENC_4_PUBLICKEYBYTES     1440
 #define AIGIS_ENC_4_SECRETKEYBYTES     3168
@@ -1335,12 +1408,16 @@ int pqmagic_aigis_enc_3_std_dec(unsigned char *ss,
 #define AIGIS_ENC_4_SSBYTES            32
 
 int pqmagic_aigis_enc_4_std_keypair(unsigned char *pk, unsigned char *sk);
-int pqmagic_aigis_enc_4_std_enc(unsigned char *ct,
-                   unsigned char *ss,
-                   const unsigned char *pk);
-int pqmagic_aigis_enc_4_std_dec(unsigned char *ss,
-                   const unsigned char *ct,
-                   const unsigned char *sk);
+
+int pqmagic_aigis_enc_4_std_enc(
+    unsigned char *ct,
+    unsigned char *ss,
+    const unsigned char *pk);
+
+int pqmagic_aigis_enc_4_std_dec(
+    unsigned char *ss,
+    const unsigned char *ct,
+    const unsigned char *sk);
 
 /*
     AIGIS-ENC API END

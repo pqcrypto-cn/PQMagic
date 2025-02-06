@@ -18,7 +18,7 @@ void cycle_bench(void)
   uint8_t sig[SIG_BYTES];
   uint8_t pk[SIG_PUBLICKEYBYTES];
   uint8_t sk[SIG_SECRETKEYBYTES];
-  unsigned long long sig_byts;
+  size_t sig_byts;
 
   printf("============ Start doing keypair/sign/verify cycle bench ==========\n");
 
@@ -49,7 +49,7 @@ void core_alg_benchmark(double bench_time) {
   uint8_t sig[SIG_BYTES];
   uint8_t pk[SIG_PUBLICKEYBYTES];
   uint8_t sk[SIG_SECRETKEYBYTES];
-  unsigned long long sig_byts;
+  size_t sig_byts;
 
 
   clock_t clk1, clk2;

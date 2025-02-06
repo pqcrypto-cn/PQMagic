@@ -126,7 +126,7 @@ int gen_aigis_sig_test_vec(void) {
     unsigned char       pk[CRYPTO_PUBLICKEYBYTES], sk[CRYPTO_SECRETKEYBYTES];
     // int                 ret_val;
     unsigned char       ctx_len = 5;
-    unsigned long long siglen;
+    size_t siglen;
 
     unsigned char keypair_coins[SEEDBYTES];
 
@@ -184,7 +184,7 @@ int check_aigis_sig_use_test_vec(void) {
     unsigned char       pk_ground_truth[CRYPTO_PUBLICKEYBYTES], sk_ground_truth[CRYPTO_SECRETKEYBYTES];
     unsigned char       ctx_len;
 	int mlen;
-    unsigned long long siglen;
+    size_t siglen;
 	int ret_val;
 
     unsigned char keypair_coins[SEEDBYTES];

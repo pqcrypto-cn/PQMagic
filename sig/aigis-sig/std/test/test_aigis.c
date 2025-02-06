@@ -110,7 +110,7 @@ void multi_random_msg_correctness(void) {
   uint8_t m2[SIG_BYTES + MLEN];
   uint8_t pk[SIG_PUBLICKEYBYTES];
   uint8_t sk[SIG_SECRETKEYBYTES];
-  unsigned long long sm_byts, mlen;
+  size_t sm_byts, mlen;
   uint8_t ctx[MLEN];
   randombytes(ctx, MLEN);
 

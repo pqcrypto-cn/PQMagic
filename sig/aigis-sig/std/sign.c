@@ -250,9 +250,9 @@ PQMAGIC_EXPORT int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
 * Description: Computes signature.
 *
 * Arguments:   - unsigned char *sig:   pointer to output signature (of length CRYPTO_BYTES)
-*              - unsigned long long *siglen: pointer to output length of signature
+*              - size_t *siglen: pointer to output length of signature
 *              - unsigned char *m:     pointer to message to be signed
-*              - unsigned long long mlen:    length of message
+*              - size_t mlen:    length of message
 *              - unsigned char *sk:    pointer to bit-packed secret key
 *
 * Returns 0 (success), -1 (context string too long error)
@@ -263,12 +263,12 @@ PQMAGIC_EXPORT int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
 **************************************************/
 PQMAGIC_EXPORT int crypto_sign_signature_internal(
   unsigned char *sig, 
-  unsigned long long *siglen, 
+  size_t *siglen, 
   const unsigned char *m, 
-  unsigned long long mlen, 
+  size_t mlen, 
   const unsigned char *sk)
 {
-  unsigned long long i, j;
+  size_t i, j;
   unsigned int n;
   unsigned char *buf; 
   uint16_t nonce = 0;
@@ -367,21 +367,21 @@ PQMAGIC_EXPORT int crypto_sign_signature_internal(
 * Description: Computes signature.
 *
 * Arguments:   - unsigned char *sig:   pointer to output signature (of length CRYPTO_BYTES)
-*              - unsigned long long *siglen: pointer to output length of signature
+*              - size_t *siglen: pointer to output length of signature
 *              - unsigned char *m:     pointer to message to be signed
-*              - unsigned long long mlen:    length of message
+*              - size_t mlen:    length of message
 *              - unsigned char *ctx:   pointer to ctx string
-*              - unsigned long long ctx_len: length of ctx string
+*              - size_t ctx_len: length of ctx string
 *              - unsigned char *sk:    pointer to bit-packed secret key
 *
 * Returns 0 (success), -1 (context string too long error)
 **************************************************/
 PQMAGIC_EXPORT int crypto_sign_signature(unsigned char *sig,
-                          unsigned long long *siglen,
+                          size_t *siglen,
                           const unsigned char *m,
-                          unsigned long long mlen,
+                          size_t mlen,
                           const unsigned char *ctx,
-                          unsigned long long ctx_len,
+                          size_t ctx_len,
                           const unsigned char *sk)
 {
 
@@ -418,25 +418,25 @@ PQMAGIC_EXPORT int crypto_sign_signature(unsigned char *sig,
 * Arguments:   - unsigned char *sm: pointer to output signed message (allocated
 *                             array with CRYPTO_BYTES + mlen bytes),
 *                             can be equal to m
-*              - unsigned long long *smlen: pointer to output length of signed
+*              - size_t *smlen: pointer to output length of signed
 *                               message
 *              - unsigned char *m: pointer to message to be signed
-*              - unsigned long long mlen: length of message
+*              - size_t mlen: length of message
 *              - unsigned char *ctx:   pointer to ctx string
-*              - unsigned long long ctx_len: length of ctx string
+*              - size_t ctx_len: length of ctx string
 *              - unsigned char *sk: pointer to bit-packed secret key
 *
 * Returns 0 (success), -1 (context string too long error)
 **************************************************/
 PQMAGIC_EXPORT int crypto_sign(unsigned char *sm,
-                unsigned long long *smlen,
+                size_t *smlen,
                 const unsigned char *m,
-                unsigned long long mlen,
+                size_t mlen,
                 const unsigned char *ctx,
-                unsigned long long ctx_len,
+                size_t ctx_len,
                 const unsigned char *sk)
 {
-  unsigned long long i;
+  size_t i;
 
   for(i = 0; i < mlen; ++i)
     sm[CRYPTO_BYTES + mlen - 1 - i] = m[mlen - 1 - i];
@@ -451,19 +451,19 @@ PQMAGIC_EXPORT int crypto_sign(unsigned char *sm,
 * Description: Verifies signature.
 *
 * Arguments:   - unsigned char *m: pointer to input signature
-*              - unsigned long long siglen: length of signature
+*              - size_t siglen: length of signature
 *              - const unsigned char *m: pointer to message
-*              - unsigned long long mlen: length of message
+*              - size_t mlen: length of message
 *              - const unsigned char *pk: pointer to bit-packed public key
 *
 * Returns 0 if signature could be verified correctly and -1 otherwise
 **************************************************/
 PQMAGIC_EXPORT int crypto_sign_verify_internal(
-  const unsigned char *sig, unsigned long long siglen,
-  const unsigned char *m, unsigned long long mlen,
+  const unsigned char *sig, size_t siglen,
+  const unsigned char *m, size_t mlen,
   const unsigned char *pk)
 {
-  unsigned long long i;
+  size_t i;
   unsigned char rho[SEEDBYTES];
   unsigned char *buf; 
   poly     c, chat, cp;
@@ -531,21 +531,21 @@ PQMAGIC_EXPORT int crypto_sign_verify_internal(
 * Description: Verifies signature.
 *
 * Arguments:   - unsigned char *m: pointer to input signature
-*              - unsigned long long siglen: length of signature
+*              - size_t siglen: length of signature
 *              - const unsigned char *m: pointer to message
-*              - unsigned long long mlen: length of message
+*              - size_t mlen: length of message
 *              - unsigned char *ctx:   pointer to ctx string
-*              - unsigned long long ctx_len: length of ctx string
+*              - size_t ctx_len: length of ctx string
 *              - const unsigned char *pk: pointer to bit-packed public key
 *
 * Returns 0 if signature could be verified correctly and -1 otherwise
 **************************************************/
 PQMAGIC_EXPORT int crypto_sign_verify(const unsigned char *sig,
-                       unsigned long long siglen,
+                       size_t siglen,
                        const unsigned char *m,
-                       unsigned long long mlen,
+                       size_t mlen,
                        const unsigned char *ctx,
-                       unsigned long long ctx_len,
+                       size_t ctx_len,
                        const unsigned char *pk)
 {
 
@@ -574,24 +574,24 @@ PQMAGIC_EXPORT int crypto_sign_verify(const unsigned char *sig,
 *
 * Arguments:   - unsigned char *m: pointer to output message (allocated
 *                            array with smlen bytes), can be equal to sm
-*              - unsigned long long *mlen: pointer to output length of message
+*              - size_t *mlen: pointer to output length of message
 *              - const unsigned char *sm: pointer to signed message
-*              - unsigned long long smlen: length of signed message
+*              - size_t smlen: length of signed message
 *              - unsigned char *ctx:   pointer to ctx string
-*              - unsigned long long ctx_len: length of ctx string
+*              - size_t ctx_len: length of ctx string
 *              - const unsigned char *pk: pointer to bit-packed public key
 *
 * Returns 0 if signed message could be verified correctly and -1 otherwise
 **************************************************/
 PQMAGIC_EXPORT int crypto_sign_open(unsigned char *m,
-                     unsigned long long *mlen,
+                     size_t *mlen,
                      const unsigned char *sm,
-                     unsigned long long smlen,
+                     size_t smlen,
                      const unsigned char *ctx,
-                     unsigned long long ctx_len,
+                     size_t ctx_len,
                      const unsigned char *pk)
 {
-  unsigned long long i;
+  size_t i;
 
   if(smlen < CRYPTO_BYTES)
     goto badsig;
