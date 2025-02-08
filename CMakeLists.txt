@@ -233,12 +233,22 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
-# Add all support into on library.
-add_library(pqmagic_target SHARED ${SUPPORT_ALG_OBJECT_TARGET})
-target_link_libraries(pqmagic_target PRIVATE sm3 fips202 randombytes)
+# Add all support into one library.
+add_library(
+    pqmagic_target SHARED 
+    ${SUPPORT_ALG_OBJECT_TARGET}
+    $<TARGET_OBJECTS:randombytes>
+    $<TARGET_OBJECTS:sm3>
+    $<TARGET_OBJECTS:fips202>
+)
 
-add_library(pqmagic_static_target STATIC ${SUPPORT_ALG_OBJECT_TARGET})
-target_link_libraries(pqmagic_static_target PRIVATE sm3 fips202 randombytes)
+add_library(
+    pqmagic_static_target STATIC 
+    ${SUPPORT_ALG_OBJECT_TARGET}
+    $<TARGET_OBJECTS:randombytes>
+    $<TARGET_OBJECTS:sm3>
+    $<TARGET_OBJECTS:fips202>
+)
 
 # Set library name.
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")

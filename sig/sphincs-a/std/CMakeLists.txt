@@ -154,12 +154,22 @@ set(SHARED_LIB_NAME "${LIBRARY_PREFIX}pqmagic_sphincs_a_std${DYNAMIC_LIB_SUFFIX}
 set(STATIC_LIB_NAME "${LIBRARY_PREFIX}pqmagic_sphincs_a_std${STATIC_LIB_SUFFIX}")
 
 # Add shared lib.
-add_library(sphincs_a_target SHARED ${TARGET_OBJECTS_ALL})
-target_link_libraries(sphincs_a_target PRIVATE sm3 fips202 randombytes)
+add_library(
+    sphincs_a_target SHARED 
+    ${TARGET_OBJECTS_ALL}
+    $<TARGET_OBJECTS:randombytes>
+    $<TARGET_OBJECTS:sm3>
+    $<TARGET_OBJECTS:fips202>
+)
 
 # Add static lib.
-add_library(sphincs_a_static_target STATIC ${TARGET_OBJECTS_ALL})
-target_link_libraries(sphincs_a_static_target PRIVATE sm3 fips202 randombytes)
+add_library(
+    sphincs_a_static_target STATIC 
+    ${TARGET_OBJECTS_ALL}
+    $<TARGET_OBJECTS:randombytes>
+    $<TARGET_OBJECTS:sm3>
+    $<TARGET_OBJECTS:fips202>
+)
 
 # Set library name.
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")

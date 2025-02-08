@@ -62,20 +62,36 @@ set(STATIC_LIB_NAME "${LIBRARY_PREFIX}pqmagic_kyber_std${STATIC_LIB_SUFFIX}")
 
 if(USE_SM3)
     # Add shared lib.
-    add_library(kyber_target SHARED ${TARGET_OBJECTS_ALL})
-    target_link_libraries(kyber_target PRIVATE sm3 randombytes)
+    add_library(
+        kyber_target SHARED 
+        ${TARGET_OBJECTS_ALL}
+        $<TARGET_OBJECTS:randombytes>
+        $<TARGET_OBJECTS:sm3>
+    )
 
     # Add static lib.
-    add_library(kyber_static_target STATIC ${TARGET_OBJECTS_ALL})
-    target_link_libraries(kyber_static_target PRIVATE sm3 randombytes)
+    add_library(
+        kyber_static_target STATIC 
+        ${TARGET_OBJECTS_ALL}
+        $<TARGET_OBJECTS:randombytes>
+        $<TARGET_OBJECTS:sm3>
+    )
 elseif(USE_SHAKE)
     # Add shared lib.
-    add_library(kyber_target SHARED ${TARGET_OBJECTS_ALL})
-    target_link_libraries(kyber_target PRIVATE fips202 randombytes)
+    add_library(
+        kyber_target SHARED 
+        ${TARGET_OBJECTS_ALL}
+        $<TARGET_OBJECTS:randombytes>
+        $<TARGET_OBJECTS:fips202>
+    )
 
     # Add static lib.
-    add_library(kyber_static_target STATIC ${TARGET_OBJECTS_ALL})
-    target_link_libraries(kyber_static_target PRIVATE fips202 randombytes)
+    add_library(
+        kyber_static_target STATIC 
+        ${TARGET_OBJECTS_ALL}
+        $<TARGET_OBJECTS:randombytes>
+        $<TARGET_OBJECTS:fips202>
+    )
 else()
     message(FATAL_ERROR "Choose hash mode by -DUSE_SM3=ON or -DUSE_SHAKE=ON")
 endif()

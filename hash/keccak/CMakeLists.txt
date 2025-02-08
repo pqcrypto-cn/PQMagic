@@ -10,5 +10,5 @@ set(FIPS202_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/fips202.c
 )
 
-# add static lib.
-add_library(fips202 STATIC ${FIPS202_SOURCES})
+# Set fips202 object.
+add_library(fips202 OBJECT ${FIPS202_SOURCES})

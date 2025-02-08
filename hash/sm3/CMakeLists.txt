@@ -12,5 +12,5 @@ set(SM3_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/mgf_sm3.c
 )
 
-# add static lib.
-add_library(sm3 STATIC ${SM3_SOURCES})
+# Set sm3 object.
+add_library(sm3 OBJECT ${SM3_SOURCES})
