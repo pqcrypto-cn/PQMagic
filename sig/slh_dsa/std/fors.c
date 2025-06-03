@@ -48,15 +48,15 @@ static void fors_gen_leafx1(unsigned char *leaf,
  * @brief Convert a byte string into a base 2^b representation
  * See FIPS 205 Algorithm 4
  *
+ * @param out The array of returned base 2^b integers that represents the first
+ *            |outlen|*|b| bits of |in|
  * @param in An input byte stream with a size >= |outlen * b / 8|
  * @param b The bit size to divide |in| into
  *          This is one of 6, 8, 9, 12 or 14 for FORS.
- * @param out The array of returned base 2^b integers that represents the first
- *            |outlen|*|b| bits of |in|
  * @param out_len The size of |out|
  */
-static void message_to_indices(const uint8_t *in, uint32_t b,
-                        uint32_t *out, size_t out_len)
+static void message_to_indices(uint32_t *out, const uint8_t *in,
+                               uint32_t b, size_t out_len)
 {
     size_t consumed = 0;
     uint32_t bits = 0;
@@ -98,7 +98,7 @@ void fors_sign(unsigned char *sig, unsigned char *pk,
     copy_keypair_addr(fors_pk_addr, fors_addr);
     set_type(fors_pk_addr, SPX_ADDR_TYPE_FORSPK);
 
-    message_to_indices(indices, SPX_FORS_HEIGHT, m, SPX_FORS_TREES);
+    message_to_indices(indices, m, SPX_FORS_HEIGHT, SPX_FORS_TREES);
 
     for (i = 0; i < SPX_FORS_TREES; i++) {
         idx_offset = i * (1 << SPX_FORS_HEIGHT);
@@ -150,7 +150,7 @@ void fors_pk_from_sig(unsigned char *pk,
     set_type(fors_tree_addr, SPX_ADDR_TYPE_FORSTREE);
     set_type(fors_pk_addr, SPX_ADDR_TYPE_FORSPK);
 
-    message_to_indices(indices, SPX_FORS_HEIGHT, m, SPX_FORS_TREES);
+    message_to_indices(indices, m, SPX_FORS_HEIGHT, SPX_FORS_TREES);
 
     for (i = 0; i < SPX_FORS_TREES; i++) {
         idx_offset = i * (1 << SPX_FORS_HEIGHT);
