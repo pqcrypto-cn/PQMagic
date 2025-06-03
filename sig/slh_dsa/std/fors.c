@@ -43,22 +43,35 @@ static void fors_gen_leafx1(unsigned char *leaf,
                     ctx, fors_leaf_addr);
 }
 
-/**
- * Interprets m as SPX_FORS_HEIGHT-bit unsigned integers.
- * Assumes m contains at least SPX_FORS_HEIGHT * SPX_FORS_TREES bits.
- * Assumes indices has space for SPX_FORS_TREES integers.
- */
-static void message_to_indices(uint32_t *indices, const unsigned char *m)
-{
-    unsigned int i, j;
-    unsigned int offset = 0;
 
-    for (i = 0; i < SPX_FORS_TREES; i++) {
-        indices[i] = 0;
-        for (j = 0; j < SPX_FORS_HEIGHT; j++) {
-            indices[i] ^= ((m[offset >> 3] >> (offset & 0x7)) & 1u) << j;
-            offset++;
+/**
+ * @brief Convert a byte string into a base 2^b representation
+ * See FIPS 205 Algorithm 4
+ *
+ * @param out The array of returned base 2^b integers that represents the first
+ *            |outlen|*|b| bits of |in|
+ * @param in An input byte stream with a size >= |outlen * b / 8|
+ *
+ * 
+ * @const SPX_FORS_HEIGHT: b, The bit size to divide |in| into
+ *          This is one of 6, 8, 9, 12 or 14 for FORS.
+ * @const SPX_FORS_TREES: out_len, The size of |out|
+ */
+static void message_to_indices(uint32_t *out, const uint8_t *in)
+{
+    size_t consumed = 0;
+    uint32_t bits = 0;
+    uint32_t total = 0;
+    const uint32_t mask = (1 << SPX_FORS_HEIGHT) - 1;
+
+    for (consumed = 0; consumed < SPX_FORS_TREES; consumed++) {
+        while (bits < SPX_FORS_HEIGHT) {
+            total <<= 8;
+            total += *in++;
+            bits += 8;
         }
+        bits -= SPX_FORS_HEIGHT;
+        *out++ = (total >> bits) & mask;
     }
 }
 
