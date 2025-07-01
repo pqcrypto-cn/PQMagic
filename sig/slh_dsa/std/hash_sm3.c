@@ -53,7 +53,7 @@ void gen_message_random(unsigned char *R, const unsigned char *sk_prf,
     memcpy(buf + SPX_N, m, mlen);
 
     sm3_hmac(buf, SPX_N + mlen, sk_prf, SPX_N, outbuf);
-    memcpy(R, buf, SPX_N);
+    memcpy(R, outbuf, SPX_N);
 }
 
 /**
