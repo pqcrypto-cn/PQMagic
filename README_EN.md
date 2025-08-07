@@ -182,6 +182,6 @@ Please refer to our website (https://pqcrypto.dev/benchmarking/) to see more det
 
 - Email:
   - Primary Contact: yuyu [at] yuyu.hk
-  - Tech. Contact: heyt [at] sqz.ac.cn
+  - Tech. Contact: yituohe [at] 163.com
 - Website: https://pqcrypto.dev/
 - Backup Website: https://pqcrypto.cn/
