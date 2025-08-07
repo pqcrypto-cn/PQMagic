@@ -44,8 +44,11 @@ foreach(MODE ${ML_KEM_MODES})
     target_compile_definitions(ml_kem_objects_${MODE} PRIVATE USE_SHAKE)
     endif()
 
+    # If we need to compile each algorithm components into shared/static library
+    if(COMPILE_COMPONENT_LIBRARY)
     # Add static lib.
     add_library(ml_kem_static_${MODE} STATIC $<TARGET_OBJECTS:ml_kem_objects_${MODE}>)
+    endif()
     
     list(APPEND TARGET_OBJECTS_ALL $<TARGET_OBJECTS:ml_kem_objects_${MODE}>)
     list(APPEND SUPPORT_ALG_OBJECT_TARGET $<TARGET_OBJECTS:ml_kem_objects_${MODE}>)
@@ -55,6 +58,8 @@ endforeach()
 # Pass to parents
 set(SUPPORT_ALG_OBJECT_TARGET ${SUPPORT_ALG_OBJECT_TARGET} PARENT_SCOPE)
 
+# If we need to compile each algorithm components into shared/static library
+if(COMPILE_COMPONENT_LIBRARY)
 # Set custom target output name
 set(SHARED_LIB_NAME "${LIBRARY_PREFIX}pqmagic_ml_kem_std${DYNAMIC_LIB_SUFFIX}")
 set(STATIC_LIB_NAME "${LIBRARY_PREFIX}pqmagic_ml_kem_std${STATIC_LIB_SUFFIX}")
@@ -98,16 +103,29 @@ endif()
 # Set library name.
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Windows has different rules.
-    # shared：*.dll + *.lib（import library）
-    # static：*.lib
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    # shared：lib*.dll + lib*.lib（import library）
+    # static：lib*.lib
+    set_target_properties(ml_kem_target PROPERTIES
+        OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_ml_kem_std"                     # DLL and import
+        RUNTIME_OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_ml_kem_std"             # DLL：*.dll
+        ARCHIVE_OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_ml_kem_std_import"      # import lib：*_import.lib
+    )
+    set_target_properties(ml_kem_static_target PROPERTIES
+        OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_ml_kem_std"              # static：*.lib
+    )
+    else() # gcc
+    # shared：lib*.dll + *.dll.a（import library）
+    # static：lib*.a
     set_target_properties(ml_kem_target PROPERTIES
         OUTPUT_NAME "pqmagic_ml_kem_std"                     # DLL and import
         RUNTIME_OUTPUT_NAME "pqmagic_ml_kem_std"             # DLL：*.dll
-        ARCHIVE_OUTPUT_NAME "pqmagic_ml_kem_std_import"      # import lib：*_import.lib
+        ARCHIVE_OUTPUT_NAME "pqmagic_ml_kem_std_import"      # import lib：*_import.dll.a
     )
     set_target_properties(ml_kem_static_target PROPERTIES
-        OUTPUT_NAME "pqmagic_ml_kem_std"              # static：*.lib
+        OUTPUT_NAME "pqmagic_ml_kem_std"              # static：*.a
     )
+    endif()
 else()
     # Unix-like（macOS/Linux）
     # shared：lib*.so/lib*.dylib
@@ -125,6 +143,8 @@ install(FILES ${CURRENT_BUILD_DIR}/${SHARED_LIB_NAME}
     DESTINATION ${INSTALL_LIB_DIR})
 install(FILES ${CURRENT_BUILD_DIR}/${STATIC_LIB_NAME}
     DESTINATION ${INSTALL_LIB_DIR})
+
+endif()
 
 # Install api.h params.h to include/ml_kem dir
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/api.h DESTINATION ${INSTALL_INCLUDE_DIR}/kem/ml_kem)

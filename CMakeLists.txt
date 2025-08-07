@@ -144,13 +144,58 @@ elseif(USE_SHAKE)
 message(STATUS "Hash Component: SHAKE")
 endif()
 
+option(COMPILE_COMPONENT_LIBRARY "Compile each algorithm components into shared/static library." OFF)
+if(COMPILE_COMPONENT_LIBRARY)
+message(STATUS "Compile each algorithm components into shared/static library: ENABLE")
+else()
+message(STATUS "Compile each algorithm components into shared/static library: DISABLE")
+endif()
+
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Set global compile options
-    add_compile_options(
-        -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow
-        -Wpointer-arith -fomit-frame-pointer -O3 -mtune=native
-        -march=native -finline-functions -z noexecstack
-    )
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        # For MSVC, we can't directly use march=native equivalent
+        # So we'll use a more flexible approach by checking CPU features
+        include(CheckCXXCompilerFlag)
+        
+        # Try AVX512 first, then fallback to AVX2, then AVX
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 19.10)  # MSVC 2017+
+            check_cxx_compiler_flag("/arch:AVX512" HAS_AVX512)
+            if(HAS_AVX512)
+                add_compile_options(/arch:AVX512)
+                message(STATUS "Using AVX512 instruction set")
+            else()
+                check_cxx_compiler_flag("/arch:AVX2" HAS_AVX2)
+                if(HAS_AVX2)
+                    add_compile_options(/arch:AVX2)
+                    message(STATUS "Using AVX2 instruction set")
+                else()
+                    add_compile_options(/arch:AVX)
+                    message(STATUS "Using AVX instruction set")
+                endif()
+            endif()
+        else()
+            # For older MSVC versions, default to AVX
+            add_compile_options(/arch:AVX)
+            message(STATUS "Using AVX instruction set (older MSVC version)")
+        endif()
+        
+        # Add common optimization flags
+        add_compile_options(/W4 /O2 /Oi /GL)
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        add_compile_options(
+            -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow
+            -Wpointer-arith -fomit-frame-pointer -O3 -mtune=native
+            -march=native -finline-functions
+        )
+    else()  # GCC
+        add_compile_options(
+            -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow
+            -Wpointer-arith -fomit-frame-pointer -O3 -mtune=native
+            -march=native -finline-functions -z noexecstack
+        )
+    endif()
 else()
     # Set global compile options
     add_compile_options(
@@ -266,17 +311,32 @@ add_library(
 
 # Set library name.
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+
     # Windows has different rules.
-    # shared：pqmagic.dll + pqmagic.lib（import library）
-    # static：pqmagic_static.lib
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    # shared：libpqmagic.dll + libpqmagic.lib（import library）
+    # static：libpqmagic_static.lib
+    message(STATUS "For CLANG/MSVC Set prefix: ${LIBRARY_PREFIX}")
+    set_target_properties(pqmagic_target PROPERTIES
+        OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_${PQMAGIC_VERSION}"                     # DLL and import
+        RUNTIME_OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_${PQMAGIC_VERSION}"             # DLL：pqmagic.dll
+        ARCHIVE_OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_${PQMAGIC_VERSION}_import"      # import lib：pqmagic_import.lib
+    )
+    set_target_properties(pqmagic_static_target PROPERTIES
+        OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_${PQMAGIC_VERSION}"              # static：pqmagic_static.lib
+    )
+    else() # gcc
+    # shared：libpqmagic.dll + libpqmagic.dll.a（import library）
+    # static：libpqmagic_static.a
     set_target_properties(pqmagic_target PROPERTIES
         OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"                     # DLL and import
         RUNTIME_OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"             # DLL：pqmagic.dll
-        ARCHIVE_OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}_import"      # import lib：pqmagic_import.lib
+        ARCHIVE_OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}_import"      # import lib：pqmagic_import.dll.a
     )
     set_target_properties(pqmagic_static_target PROPERTIES
-        OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"              # static：pqmagic_static.lib
+        OUTPUT_NAME "pqmagic_${PQMAGIC_VERSION}"              # static：pqmagic_static.a
     )
+    endif()
 else()
     # Unix-like (macOS/Linux)
     # shared：libpqmagic.so/libpqmagic.dylib

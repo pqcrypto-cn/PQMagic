@@ -136,8 +136,11 @@ foreach(MODE ${SPHINCS_A_MODES})
             SPHINCS_A_HASH_MODE_NAMESPACE=${MODE}
         )
 
+        # If we need to compile each algorithm components into shared/static library
+        if(COMPILE_COMPONENT_LIBRARY)
         # Add static lib for each modes.
         add_library(sphincs_a_static_${MODE}_${THASH} STATIC $<TARGET_OBJECTS:sphincs_a_objects_${MODE}_${THASH}>)
+        endif()
 
         list(APPEND TARGET_OBJECTS_ALL $<TARGET_OBJECTS:sphincs_a_objects_${MODE}_${THASH}>)
         list(APPEND SUPPORT_ALG_OBJECT_TARGET $<TARGET_OBJECTS:sphincs_a_objects_${MODE}_${THASH}>)
@@ -149,6 +152,8 @@ endforeach()
 # Pass to parents
 set(SUPPORT_ALG_OBJECT_TARGET ${SUPPORT_ALG_OBJECT_TARGET} PARENT_SCOPE)
 
+# If we need to compile each algorithm components into shared/static library
+if(COMPILE_COMPONENT_LIBRARY)
 # Set custom target output name
 set(SHARED_LIB_NAME "${LIBRARY_PREFIX}pqmagic_sphincs_a_std${DYNAMIC_LIB_SUFFIX}")
 set(STATIC_LIB_NAME "${LIBRARY_PREFIX}pqmagic_sphincs_a_std${STATIC_LIB_SUFFIX}")
@@ -174,16 +179,29 @@ add_library(
 # Set library name.
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Windows has different rules.
-    # shared：*.dll + *.lib（import library）
-    # static：*.lib
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    # shared：lib*.dll + lib*.lib（import library）
+    # static：lib*.lib
+    set_target_properties(sphincs_a_target PROPERTIES
+        OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_sphincs_a_std"                     # DLL and import
+        RUNTIME_OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_sphincs_a_std"             # DLL：*.dll
+        ARCHIVE_OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_sphincs_a_std_import"      # import lib：*_import.lib
+    )
+    set_target_properties(sphincs_a_static_target PROPERTIES
+        OUTPUT_NAME "${LIBRARY_PREFIX}pqmagic_sphincs_a_std"              # static：*.lib
+    )
+    else() # gcc
+    # shared：lib*.dll + *.dll.a（import library）
+    # static：lib*.a
     set_target_properties(sphincs_a_target PROPERTIES
         OUTPUT_NAME "pqmagic_sphincs_a_std"                     # DLL and import
         RUNTIME_OUTPUT_NAME "pqmagic_sphincs_a_std"             # DLL：*.dll
-        ARCHIVE_OUTPUT_NAME "pqmagic_sphincs_a_std_import"      # import lib：*_import.lib
+        ARCHIVE_OUTPUT_NAME "pqmagic_sphincs_a_std_import"      # import lib：*_import.dll.a
     )
     set_target_properties(sphincs_a_static_target PROPERTIES
-        OUTPUT_NAME "pqmagic_sphincs_a_std"              # static：*.lib
+        OUTPUT_NAME "pqmagic_sphincs_a_std"              # static：*.a
     )
+    endif()
 else()
     # Unix-like（macOS/Linux）
     # shared：lib*.so/lib*.dylib
@@ -201,6 +219,8 @@ install(FILES ${CURRENT_BUILD_DIR}/${SHARED_LIB_NAME}
     DESTINATION ${INSTALL_LIB_DIR})
 install(FILES ${CURRENT_BUILD_DIR}/${STATIC_LIB_NAME}
     DESTINATION ${INSTALL_LIB_DIR})
+
+endif()
 
 # Install api.h params.h config.h to include/sphincs_a dir
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/api.h DESTINATION ${INSTALL_INCLUDE_DIR}/sig/sphincs-a/std)
