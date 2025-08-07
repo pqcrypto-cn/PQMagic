@@ -141,6 +141,6 @@ PQMagic-std 和 PQMagic-adv 版本的其余详细测试数据请见官网 https:
 
 - Email:
   - 合作联系：yuyu [at] yuyu.hk
-  - 技术联系：heyt [at] sqz.ac.cn
+  - 技术联系：yituohe [at] 163.com
 - Website: https://pqcrypto.dev/
 - Backup Website: https://pqcrypto.cn/
