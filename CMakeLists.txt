@@ -146,9 +146,9 @@ endif()
 
 option(COMPILE_COMPONENT_LIBRARY "Compile each algorithm components into shared/static library." OFF)
 if(COMPILE_COMPONENT_LIBRARY)
-message(STATUS "Compile each algorithm components into shared/static library: ENABLE")
+message(STATUS "Compile each algorithm components into shared/static library: ENABLED")
 else()
-message(STATUS "Compile each algorithm components into shared/static library: DISABLE")
+message(STATUS "Compile each algorithm components into shared/static library: DISABLED")
 endif()
 
 
