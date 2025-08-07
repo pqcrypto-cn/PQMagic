@@ -16,6 +16,13 @@
 // return 0 if success, or return error code (neg number).
 int pqmagic_ml_dsa_44_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_ml_dsa_44_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 // return 0 if success, or return error code (neg number).
 int pqmagic_ml_dsa_44_std_signature(
     unsigned char *sig, size_t *siglen,
@@ -23,11 +30,27 @@ int pqmagic_ml_dsa_44_std_signature(
     const unsigned char *ctx, size_t ctx_len,
     const unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_ml_dsa_44_std_signature_internal(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    unsigned char *sign_coins, const unsigned char *sk);
+
 // return 0 if verification success, or return error code (neg number).
 int pqmagic_ml_dsa_44_std_verify(
     const unsigned char *sig, size_t siglen,
     const unsigned char *m, size_t mlen,
     const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_ml_dsa_44_std_verify_internal(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
     const unsigned char *pk);
 
 // return 0 if success, or return error code (neg number).
@@ -54,12 +77,27 @@ int pqmagic_ml_dsa_44_std_open(
 // return 0 if success, or return error code (neg number).
 int pqmagic_ml_dsa_65_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_ml_dsa_65_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 // return 0 if success, or return error code (neg number).
 int pqmagic_ml_dsa_65_std_signature(
     unsigned char *sig, size_t *siglen,
     const unsigned char *m, size_t mlen,
     const unsigned char *ctx, size_t ctx_len,
     const unsigned char *sk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_ml_dsa_65_std_signature_internal(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    unsigned char *sign_coins, const unsigned char *sk);
 
 // return 0 if verification success, or return error code (neg number).
 int pqmagic_ml_dsa_65_std_verify(
@@ -68,8 +106,16 @@ int pqmagic_ml_dsa_65_std_verify(
     const unsigned char *ctx, size_t ctx_len,
     const unsigned char *pk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_ml_dsa_65_std_verify_internal(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *pk);
+
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_ml_dsa_65_std(
     unsigned char *sm, size_t *smlen,
@@ -77,7 +123,7 @@ int pqmagic_ml_dsa_65_std(
     const unsigned char *ctx, size_t ctx_len,
     const unsigned char *sk);
 // return 0 if verification success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_ml_dsa_65_std_open(
     unsigned char *m, size_t *mlen,
@@ -93,12 +139,27 @@ int pqmagic_ml_dsa_65_std_open(
 // return 0 if success, or return error code (neg number).
 int pqmagic_ml_dsa_87_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_ml_dsa_87_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 // return 0 if success, or return error code (neg number).
 int pqmagic_ml_dsa_87_std_signature(
     unsigned char *sig, size_t *siglen,
     const unsigned char *m, size_t mlen,
     const unsigned char *ctx, size_t ctx_len,
     const unsigned char *sk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_ml_dsa_87_std_signature_internal(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    unsigned char *sign_coins, const unsigned char *sk);
 
 // return 0 if verification success, or return error code (neg number).
 int pqmagic_ml_dsa_87_std_verify(
@@ -107,8 +168,16 @@ int pqmagic_ml_dsa_87_std_verify(
     const unsigned char *ctx, size_t ctx_len,
     const unsigned char *pk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_ml_dsa_87_std_verify_internal(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *pk);
+
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_ml_dsa_87_std(
     unsigned char *sm, size_t *smlen,
@@ -116,7 +185,7 @@ int pqmagic_ml_dsa_87_std(
     const unsigned char *ctx, size_t ctx_len,
     const unsigned char *sk);
 // return 0 if verification success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_ml_dsa_87_std_open(
     unsigned char *m, size_t *mlen,
@@ -145,25 +214,25 @@ int pqmagic_slh_dsa_sha2_128f_simple_std_sign_keypair(unsigned char *pk, unsigne
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_sha2_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_sha2_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_sha2_128f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                     const unsigned char *m, size_t mlen,
+                                                     const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_128f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                              const unsigned char *m, size_t mlen,
+                                              const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_128f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                   const unsigned char *sm, size_t smlen,
+                                                   const unsigned char *pk);
 
 #define SLH_DSA_SHA2_128s_PUBLICKEYBYTES   32
 #define SLH_DSA_SHA2_128s_SECRETKEYBYTES   64
@@ -174,25 +243,25 @@ int pqmagic_slh_dsa_sha2_128s_simple_std_sign_keypair(unsigned char *pk, unsigne
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_sha2_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_sha2_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_sha2_128s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                     const unsigned char *m, size_t mlen,
+                                                     const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_128s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                              const unsigned char *m, size_t mlen,
+                                              const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_128s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                   const unsigned char *sm, size_t smlen,
+                                                   const unsigned char *pk);
 
 #define SLH_DSA_SHA2_192f_PUBLICKEYBYTES   48
 #define SLH_DSA_SHA2_192f_SECRETKEYBYTES   96
@@ -203,25 +272,25 @@ int pqmagic_slh_dsa_sha2_192f_simple_std_sign_keypair(unsigned char *pk, unsigne
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_sha2_192f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_sha2_192f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_sha2_192f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                     const unsigned char *m, size_t mlen,
+                                                     const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_192f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                              const unsigned char *m, size_t mlen,
+                                              const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_192f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                   const unsigned char *sm, size_t smlen,
+                                                   const unsigned char *pk);
 
 #define SLH_DSA_SHA2_192s_PUBLICKEYBYTES   48
 #define SLH_DSA_SHA2_192s_SECRETKEYBYTES   96
@@ -232,25 +301,25 @@ int pqmagic_slh_dsa_sha2_192s_simple_std_sign_keypair(unsigned char *pk, unsigne
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_sha2_192s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_sha2_192s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_sha2_192s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                     const unsigned char *m, size_t mlen,
+                                                     const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_192s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                              const unsigned char *m, size_t mlen,
+                                              const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_192s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                   const unsigned char *sm, size_t smlen,
+                                                   const unsigned char *pk);
 
 #define SLH_DSA_SHA2_256f_PUBLICKEYBYTES   64
 #define SLH_DSA_SHA2_256f_SECRETKEYBYTES   128
@@ -261,25 +330,25 @@ int pqmagic_slh_dsa_sha2_256f_simple_std_sign_keypair(unsigned char *pk, unsigne
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_sha2_256f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_sha2_256f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_sha2_256f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                     const unsigned char *m, size_t mlen,
+                                                     const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_256f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                              const unsigned char *m, size_t mlen,
+                                              const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_256f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                   const unsigned char *sm, size_t smlen,
+                                                   const unsigned char *pk);
 
 #define SLH_DSA_SHA2_256s_PUBLICKEYBYTES   64
 #define SLH_DSA_SHA2_256s_SECRETKEYBYTES   128
@@ -290,25 +359,25 @@ int pqmagic_slh_dsa_sha2_256s_simple_std_sign_keypair(unsigned char *pk, unsigne
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_sha2_256s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_sha2_256s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_sha2_256s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                     const unsigned char *m, size_t mlen,
+                                                     const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_256s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                              const unsigned char *m, size_t mlen,
+                                              const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sha2_256s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                   const unsigned char *sm, size_t smlen,
+                                                   const unsigned char *pk);
 
 // ******************* SHA2 ****************** //
 
@@ -324,25 +393,25 @@ int pqmagic_slh_dsa_shake_128f_simple_std_sign_keypair(unsigned char *pk, unsign
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_shake_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_shake_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                         const unsigned char *m, size_t mlen,
+                                                         const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_shake_128f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                      const unsigned char *m, size_t mlen,
+                                                      const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_128f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                               const unsigned char *m, size_t mlen,
+                                               const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_128f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                    const unsigned char *sm, size_t smlen,
+                                                    const unsigned char *pk);
 
 #define SLH_DSA_SHAKE_128s_PUBLICKEYBYTES   32
 #define SLH_DSA_SHAKE_128s_SECRETKEYBYTES   64
@@ -353,25 +422,25 @@ int pqmagic_slh_dsa_shake_128s_simple_std_sign_keypair(unsigned char *pk, unsign
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_shake_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_shake_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                         const unsigned char *m, size_t mlen,
+                                                         const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_shake_128s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                      const unsigned char *m, size_t mlen,
+                                                      const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_128s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                               const unsigned char *m, size_t mlen,
+                                               const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_128s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                    const unsigned char *sm, size_t smlen,
+                                                    const unsigned char *pk);
 
 #define SLH_DSA_SHAKE_192f_PUBLICKEYBYTES   48
 #define SLH_DSA_SHAKE_192f_SECRETKEYBYTES   96
@@ -382,25 +451,25 @@ int pqmagic_slh_dsa_shake_192f_simple_std_sign_keypair(unsigned char *pk, unsign
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_shake_192f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_shake_192f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                         const unsigned char *m, size_t mlen,
+                                                         const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_shake_192f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                      const unsigned char *m, size_t mlen,
+                                                      const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_192f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                               const unsigned char *m, size_t mlen,
+                                               const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_192f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                    const unsigned char *sm, size_t smlen,
+                                                    const unsigned char *pk);
 
 #define SLH_DSA_SHAKE_192s_PUBLICKEYBYTES   48
 #define SLH_DSA_SHAKE_192s_SECRETKEYBYTES   96
@@ -411,25 +480,25 @@ int pqmagic_slh_dsa_shake_192s_simple_std_sign_keypair(unsigned char *pk, unsign
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_shake_192s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_shake_192s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                         const unsigned char *m, size_t mlen,
+                                                         const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_shake_192s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                      const unsigned char *m, size_t mlen,
+                                                      const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_192s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                               const unsigned char *m, size_t mlen,
+                                               const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_192s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                    const unsigned char *sm, size_t smlen,
+                                                    const unsigned char *pk);
 
 #define SLH_DSA_SHAKE_256f_PUBLICKEYBYTES   64
 #define SLH_DSA_SHAKE_256f_SECRETKEYBYTES   128
@@ -440,25 +509,25 @@ int pqmagic_slh_dsa_shake_256f_simple_std_sign_keypair(unsigned char *pk, unsign
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_shake_256f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_shake_256f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                         const unsigned char *m, size_t mlen,
+                                                         const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_shake_256f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                      const unsigned char *m, size_t mlen,
+                                                      const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_256f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                               const unsigned char *m, size_t mlen,
+                                               const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_256f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                    const unsigned char *sm, size_t smlen,
+                                                    const unsigned char *pk);
 
 #define SLH_DSA_SHAKE_256s_PUBLICKEYBYTES   64
 #define SLH_DSA_SHAKE_256s_SECRETKEYBYTES   128
@@ -469,25 +538,25 @@ int pqmagic_slh_dsa_shake_256s_simple_std_sign_keypair(unsigned char *pk, unsign
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_shake_256s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_shake_256s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                         const unsigned char *m, size_t mlen,
+                                                         const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_shake_256s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                      const unsigned char *m, size_t mlen,
+                                                      const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_256s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                               const unsigned char *m, size_t mlen,
+                                               const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_shake_256s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                    const unsigned char *sm, size_t smlen,
+                                                    const unsigned char *pk);
 
 // ******************* SHAKE ****************** //
 
@@ -502,25 +571,25 @@ int pqmagic_slh_dsa_sm3_128f_simple_std_sign_keypair(unsigned char *pk, unsigned
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_sm3_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_sm3_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                       const unsigned char *m, size_t mlen,
+                                                       const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_sm3_128f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                    const unsigned char *m, size_t mlen,
+                                                    const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sm3_128f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                             const unsigned char *m, size_t mlen,
+                                             const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sm3_128f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                  const unsigned char *sm, size_t smlen,
+                                                  const unsigned char *pk);
 
 #define SLH_DSA_SM3_128s_PUBLICKEYBYTES   32
 #define SLH_DSA_SM3_128s_SECRETKEYBYTES   64
@@ -531,25 +600,25 @@ int pqmagic_slh_dsa_sm3_128s_simple_std_sign_keypair(unsigned char *pk, unsigned
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_slh_dsa_sm3_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_slh_dsa_sm3_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                       const unsigned char *m, size_t mlen,
+                                                       const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_slh_dsa_sm3_128s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                    const unsigned char *m, size_t mlen,
+                                                    const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sm3_128s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                             const unsigned char *m, size_t mlen,
+                                             const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_slh_dsa_sm3_128s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                  const unsigned char *sm, size_t smlen,
+                                                  const unsigned char *pk);
 
 // ******************* SM3 ****************** //
 
@@ -570,11 +639,26 @@ int pqmagic_slh_dsa_sm3_128s_simple_std_sign_open(unsigned char *m, size_t *mlen
 // return 0 if success, or return error code (neg number).
 int pqmagic_aigis_sig1_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_sig1_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 // return 0 if success, or return error code (neg number).
 int pqmagic_aigis_sig1_std_signature(
     unsigned char *sig, size_t *siglen,
     const unsigned char *m, size_t mlen,
     const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_sig1_std_signature_internal(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
     const unsigned char *sk);
 
 // return 0 if verification success, or return error code (neg number).
@@ -584,8 +668,16 @@ int pqmagic_aigis_sig1_std_verify(
     const unsigned char *ctx, size_t ctx_len,
     const unsigned char *pk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_sig1_std_verify_internal(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *pk);
+
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_aigis_sig1_std(
     unsigned char *sm, size_t *smlen,
@@ -594,7 +686,7 @@ int pqmagic_aigis_sig1_std(
     const unsigned char *sk);
 
 // return 0 if verification success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_aigis_sig1_std_open(
     unsigned char *m, size_t *mlen,
@@ -609,11 +701,26 @@ int pqmagic_aigis_sig1_std_open(
 // return 0 if success, or return error code (neg number).
 int pqmagic_aigis_sig2_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_sig2_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 // return 0 if success, or return error code (neg number).
 int pqmagic_aigis_sig2_std_signature(
     unsigned char *sig, size_t *siglen,
     const unsigned char *m, size_t mlen,
     const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_sig2_std_signature_internal(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
     const unsigned char *sk);
 
 // return 0 if verification success, or return error code (neg number).
@@ -623,8 +730,16 @@ int pqmagic_aigis_sig2_std_verify(
     const unsigned char *ctx, size_t ctx_len,
     const unsigned char *pk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_sig2_std_verify_internal(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *pk);
+
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_aigis_sig2_std(
     unsigned char *sm, size_t *smlen,
@@ -633,7 +748,7 @@ int pqmagic_aigis_sig2_std(
     const unsigned char *sk);
 
 // return 0 if verification success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_aigis_sig2_std_open(
     unsigned char *m, size_t *mlen,
@@ -648,11 +763,26 @@ int pqmagic_aigis_sig2_std_open(
 // return 0 if success, or return error code (neg number).
 int pqmagic_aigis_sig3_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_sig3_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 // return 0 if success, or return error code (neg number).
 int pqmagic_aigis_sig3_std_signature(
     unsigned char *sig, size_t *siglen,
     const unsigned char *m, size_t mlen,
     const unsigned char *ctx, size_t ctx_len,
+    const unsigned char *sk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_sig3_std_signature_internal(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
     const unsigned char *sk);
 
 // return 0 if verification success, or return error code (neg number).
@@ -662,8 +792,16 @@ int pqmagic_aigis_sig3_std_verify(
     const unsigned char *ctx, size_t ctx_len,
     const unsigned char *pk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_sig3_std_verify_internal(
+    const unsigned char *sig, size_t siglen,
+    const unsigned char *m, size_t mlen,
+    const unsigned char *pk);
+
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_aigis_sig3_std(
     unsigned char *sm, size_t *smlen,
@@ -672,7 +810,7 @@ int pqmagic_aigis_sig3_std(
     const unsigned char *sk);
 
 // return 0 if verification success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_aigis_sig3_std_open(
     unsigned char *m, size_t *mlen,
@@ -696,11 +834,27 @@ int pqmagic_aigis_sig3_std_open(
 // return 0 if success, or return error code (neg number).
 int pqmagic_dilithium2_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_dilithium2_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 // return 0 if success, or return error code (neg number).
 int pqmagic_dilithium2_std_signature(
-    unsigned char *sig, size_t *siglen, 
-    const unsigned char *m, size_t mlen, 
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
     const unsigned char *sk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_dilithium2_std_signature_internal(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    unsigned char *sign_coins, const unsigned char *sk);
+
 // return 0 if verification success, or return error code (neg number).
 int pqmagic_dilithium2_std_verify(
     const unsigned char *sig, size_t siglen,
@@ -708,14 +862,14 @@ int pqmagic_dilithium2_std_verify(
     const unsigned char *pk);
 
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_dilithium2_std(
     unsigned char *sm, size_t *smlen,
     const unsigned char *m, size_t mlen,
     const unsigned char *sk);
 // return 0 if verification success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_dilithium2_std_open(
     unsigned char *m, size_t *mlen,
@@ -729,11 +883,27 @@ int pqmagic_dilithium2_std_open(
 // return 0 if success, or return error code (neg number).
 int pqmagic_dilithium3_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_dilithium3_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 // return 0 if success, or return error code (neg number).
 int pqmagic_dilithium3_std_signature(
-    unsigned char *sig, size_t *siglen, 
-    const unsigned char *m, size_t mlen, 
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
     const unsigned char *sk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_dilithium3_std_signature_internal(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    unsigned char *sign_coins, const unsigned char *sk);
+
 // return 0 if verification success, or return error code (neg number).
 int pqmagic_dilithium3_std_verify(
     const unsigned char *sig, size_t siglen,
@@ -741,14 +911,14 @@ int pqmagic_dilithium3_std_verify(
     const unsigned char *pk);
 
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_dilithium3_std(
     unsigned char *sm, size_t *smlen,
     const unsigned char *m, size_t mlen,
     const unsigned char *sk);
 // return 0 if verification success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_dilithium3_std_open(
     unsigned char *m, size_t *mlen,
@@ -763,11 +933,27 @@ int pqmagic_dilithium3_std_open(
 // return 0 if success, or return error code (neg number).
 int pqmagic_dilithium5_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_dilithium5_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 // return 0 if success, or return error code (neg number).
 int pqmagic_dilithium5_std_signature(
-    unsigned char *sig, size_t *siglen, 
-    const unsigned char *m, size_t mlen, 
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
     const unsigned char *sk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_dilithium5_std_signature_internal(
+    unsigned char *sig, size_t *siglen,
+    const unsigned char *m, size_t mlen,
+    unsigned char *sign_coins, const unsigned char *sk);
+
 // return 0 if verification success, or return error code (neg number).
 int pqmagic_dilithium5_std_verify(
     const unsigned char *sig, size_t siglen,
@@ -775,14 +961,14 @@ int pqmagic_dilithium5_std_verify(
     const unsigned char *pk);
 
 // return 0 if success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_dilithium5_std(
     unsigned char *sm, size_t *smlen,
     const unsigned char *m, size_t mlen,
     const unsigned char *sk);
 // return 0 if verification success, or return error code (neg number).
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_dilithium5_std_open(
     unsigned char *m, size_t *mlen,
@@ -810,25 +996,25 @@ int pqmagic_sphincs_a_sha2_128f_simple_std_sign_keypair(unsigned char *pk, unsig
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_sha2_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_sha2_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                          const unsigned char *m, size_t mlen,
+                                                          const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_sha2_128f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                       const unsigned char *m, size_t mlen,
+                                                       const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_128f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                const unsigned char *m, size_t mlen,
+                                                const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_128f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                     const unsigned char *sm, size_t smlen,
+                                                     const unsigned char *pk);
 
 #define SPHINCS_A_SHA2_128s_PUBLICKEYBYTES   32
 #define SPHINCS_A_SHA2_128s_SECRETKEYBYTES   64
@@ -839,25 +1025,25 @@ int pqmagic_sphincs_a_sha2_128s_simple_std_sign_keypair(unsigned char *pk, unsig
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_sha2_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_sha2_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                          const unsigned char *m, size_t mlen,
+                                                          const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_sha2_128s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                       const unsigned char *m, size_t mlen,
+                                                       const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_128s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                const unsigned char *m, size_t mlen,
+                                                const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_128s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                     const unsigned char *sm, size_t smlen,
+                                                     const unsigned char *pk);
 
 #define SPHINCS_A_SHA2_192f_PUBLICKEYBYTES   48
 #define SPHINCS_A_SHA2_192f_SECRETKEYBYTES   96
@@ -868,25 +1054,25 @@ int pqmagic_sphincs_a_sha2_192f_simple_std_sign_keypair(unsigned char *pk, unsig
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_sha2_192f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_sha2_192f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                          const unsigned char *m, size_t mlen,
+                                                          const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_sha2_192f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                       const unsigned char *m, size_t mlen,
+                                                       const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_192f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                const unsigned char *m, size_t mlen,
+                                                const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_192f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                     const unsigned char *sm, size_t smlen,
+                                                     const unsigned char *pk);
 
 #define SPHINCS_A_SHA2_192s_PUBLICKEYBYTES   48
 #define SPHINCS_A_SHA2_192s_SECRETKEYBYTES   96
@@ -897,25 +1083,25 @@ int pqmagic_sphincs_a_sha2_192s_simple_std_sign_keypair(unsigned char *pk, unsig
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_sha2_192s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_sha2_192s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                          const unsigned char *m, size_t mlen,
+                                                          const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_sha2_192s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                       const unsigned char *m, size_t mlen,
+                                                       const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_192s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                const unsigned char *m, size_t mlen,
+                                                const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_192s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                     const unsigned char *sm, size_t smlen,
+                                                     const unsigned char *pk);
 
 #define SPHINCS_A_SHA2_256f_PUBLICKEYBYTES   64
 #define SPHINCS_A_SHA2_256f_SECRETKEYBYTES   128
@@ -926,25 +1112,25 @@ int pqmagic_sphincs_a_sha2_256f_simple_std_sign_keypair(unsigned char *pk, unsig
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_sha2_256f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_sha2_256f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                          const unsigned char *m, size_t mlen,
+                                                          const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_sha2_256f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                       const unsigned char *m, size_t mlen,
+                                                       const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_256f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                const unsigned char *m, size_t mlen,
+                                                const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_256f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                     const unsigned char *sm, size_t smlen,
+                                                     const unsigned char *pk);
 
 #define SPHINCS_A_SHA2_256s_PUBLICKEYBYTES   64
 #define SPHINCS_A_SHA2_256s_SECRETKEYBYTES   128
@@ -955,25 +1141,25 @@ int pqmagic_sphincs_a_sha2_256s_simple_std_sign_keypair(unsigned char *pk, unsig
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_sha2_256s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_sha2_256s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                          const unsigned char *m, size_t mlen,
+                                                          const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_sha2_256s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                       const unsigned char *m, size_t mlen,
+                                                       const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_256s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                const unsigned char *m, size_t mlen,
+                                                const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sha2_256s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                     const unsigned char *sm, size_t smlen,
+                                                     const unsigned char *pk);
 
 // ******************* SHA2 ****************** //
 
@@ -989,25 +1175,25 @@ int pqmagic_sphincs_a_shake_128f_simple_std_sign_keypair(unsigned char *pk, unsi
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_shake_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_shake_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                           const unsigned char *m, size_t mlen,
+                                                           const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_shake_128f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_128f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                 const unsigned char *m, size_t mlen,
+                                                 const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_128f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                      const unsigned char *sm, size_t smlen,
+                                                      const unsigned char *pk);
 
 #define SPHINCS_A_SHAKE_128s_PUBLICKEYBYTES   32
 #define SPHINCS_A_SHAKE_128s_SECRETKEYBYTES   64
@@ -1018,25 +1204,25 @@ int pqmagic_sphincs_a_shake_128s_simple_std_sign_keypair(unsigned char *pk, unsi
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_shake_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_shake_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                           const unsigned char *m, size_t mlen,
+                                                           const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_shake_128s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_128s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                 const unsigned char *m, size_t mlen,
+                                                 const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_128s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                      const unsigned char *sm, size_t smlen,
+                                                      const unsigned char *pk);
 
 #define SPHINCS_A_SHAKE_192f_PUBLICKEYBYTES   48
 #define SPHINCS_A_SHAKE_192f_SECRETKEYBYTES   96
@@ -1047,25 +1233,25 @@ int pqmagic_sphincs_a_shake_192f_simple_std_sign_keypair(unsigned char *pk, unsi
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_shake_192f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_shake_192f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                           const unsigned char *m, size_t mlen,
+                                                           const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_shake_192f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_192f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                 const unsigned char *m, size_t mlen,
+                                                 const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_192f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                      const unsigned char *sm, size_t smlen,
+                                                      const unsigned char *pk);
 
 #define SPHINCS_A_SHAKE_192s_PUBLICKEYBYTES   48
 #define SPHINCS_A_SHAKE_192s_SECRETKEYBYTES   96
@@ -1076,25 +1262,25 @@ int pqmagic_sphincs_a_shake_192s_simple_std_sign_keypair(unsigned char *pk, unsi
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_shake_192s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_shake_192s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                           const unsigned char *m, size_t mlen,
+                                                           const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_shake_192s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_192s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                 const unsigned char *m, size_t mlen,
+                                                 const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_192s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                      const unsigned char *sm, size_t smlen,
+                                                      const unsigned char *pk);
 
 #define SPHINCS_A_SHAKE_256f_PUBLICKEYBYTES   64
 #define SPHINCS_A_SHAKE_256f_SECRETKEYBYTES   128
@@ -1105,25 +1291,25 @@ int pqmagic_sphincs_a_shake_256f_simple_std_sign_keypair(unsigned char *pk, unsi
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_shake_256f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_shake_256f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                           const unsigned char *m, size_t mlen,
+                                                           const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_shake_256f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_256f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                 const unsigned char *m, size_t mlen,
+                                                 const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_256f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                      const unsigned char *sm, size_t smlen,
+                                                      const unsigned char *pk);
 
 #define SPHINCS_A_SHAKE_256s_PUBLICKEYBYTES   64
 #define SPHINCS_A_SHAKE_256s_SECRETKEYBYTES   128
@@ -1134,25 +1320,25 @@ int pqmagic_sphincs_a_shake_256s_simple_std_sign_keypair(unsigned char *pk, unsi
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_shake_256s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_shake_256s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                           const unsigned char *m, size_t mlen,
+                                                           const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_shake_256s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                        const unsigned char *m, size_t mlen,
+                                                        const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_256s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                                 const unsigned char *m, size_t mlen,
+                                                 const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_shake_256s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                      const unsigned char *sm, size_t smlen,
+                                                      const unsigned char *pk);
 
 // ******************* SHAKE ****************** //
 
@@ -1167,25 +1353,25 @@ int pqmagic_sphincs_a_sm3_128f_simple_std_sign_keypair(unsigned char *pk, unsign
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_sm3_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_sm3_128f_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                         const unsigned char *m, size_t mlen,
+                                                         const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_sm3_128f_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                      const unsigned char *m, size_t mlen,
+                                                      const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sm3_128f_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                               const unsigned char *m, size_t mlen,
+                                               const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sm3_128f_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                    const unsigned char *sm, size_t smlen,
+                                                    const unsigned char *pk);
 
 #define SPHINCS_A_SM3_128s_PUBLICKEYBYTES   32
 #define SPHINCS_A_SM3_128s_SECRETKEYBYTES   64
@@ -1196,25 +1382,25 @@ int pqmagic_sphincs_a_sm3_128s_simple_std_sign_keypair(unsigned char *pk, unsign
 
 // return 0 if success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
-int pqmagic_sphincs_a_sm3_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen, 
-                                     const unsigned char *m, size_t mlen, 
-                                     const unsigned char *sk);
+int pqmagic_sphincs_a_sm3_128s_simple_std_sign_signature(unsigned char *sm, size_t *smlen,
+                                                         const unsigned char *m, size_t mlen,
+                                                         const unsigned char *sk);
 // return 0/1 if verification failed/success, or return error code (neg number).
 // sm pointer to output signature (of length CRYPTO_BYTES)
 int pqmagic_sphincs_a_sm3_128s_simple_std_sign_verify(const unsigned char *sm, size_t smlen,
-                                 const unsigned char *m, size_t mlen,
-                                 const unsigned char *pk);
+                                                      const unsigned char *m, size_t mlen,
+                                                      const unsigned char *pk);
 
-// sm pointer to output signed message 
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sm3_128s_simple_std_sign(unsigned char *sm, size_t *smlen,
-                           const unsigned char *m, size_t mlen,
-                           const unsigned char *sk);
-// sm pointer to output signed message 
+                                               const unsigned char *m, size_t mlen,
+                                               const unsigned char *sk);
+// sm pointer to output signed message
 // (allocated array with signature (CRYPTO_BYTES) + message (mlen bytes))
 int pqmagic_sphincs_a_sm3_128s_simple_std_sign_open(unsigned char *m, size_t *mlen,
-                                const unsigned char *sm, size_t smlen,
-                                const unsigned char *pk);
+                                                    const unsigned char *sm, size_t smlen,
+                                                    const unsigned char *pk);
 
 // ******************* SM3 ****************** //
 
@@ -1239,10 +1425,24 @@ int pqmagic_sphincs_a_sm3_128s_simple_std_sign_open(unsigned char *m, size_t *ml
 
 int pqmagic_ml_kem_512_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_ml_kem_512_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 int pqmagic_ml_kem_512_std_enc(
     unsigned char *ct,
     unsigned char *ss,
     const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_ml_kem_512_std_enc_internal(
+    unsigned char *ct, unsigned char *ss,
+    const unsigned char *pk, unsigned char *kem_enc_coins);
 
 int pqmagic_ml_kem_512_std_dec(
     unsigned char *ss,
@@ -1256,10 +1456,24 @@ int pqmagic_ml_kem_512_std_dec(
 
 int pqmagic_ml_kem_768_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_ml_kem_768_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 int pqmagic_ml_kem_768_std_enc(
     unsigned char *ct,
     unsigned char *ss,
     const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_ml_kem_768_std_enc_internal(
+    unsigned char *ct, unsigned char *ss,
+    const unsigned char *pk, unsigned char *kem_enc_coins);
 
 int pqmagic_ml_kem_768_std_dec(
     unsigned char *ss,
@@ -1273,10 +1487,24 @@ int pqmagic_ml_kem_768_std_dec(
 
 int pqmagic_ml_kem_1024_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_ml_kem_1024_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 int pqmagic_ml_kem_1024_std_enc(
     unsigned char *ct,
     unsigned char *ss,
     const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_ml_kem_1024_std_enc_internal(
+    unsigned char *ct, unsigned char *ss,
+    const unsigned char *pk, unsigned char *kem_enc_coins);
 
 int pqmagic_ml_kem_1024_std_dec(
     unsigned char *ss,
@@ -1299,10 +1527,24 @@ int pqmagic_ml_kem_1024_std_dec(
 
 int pqmagic_kyber512_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_kyber512_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 int pqmagic_kyber512_std_enc(
     unsigned char *ct,
     unsigned char *ss,
     const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_kyber512_std_enc_internal(
+    unsigned char *ct, unsigned char *ss,
+    const unsigned char *pk, unsigned char *kem_enc_coins);
 
 int pqmagic_kyber512_std_dec(
     unsigned char *ss,
@@ -1316,10 +1558,24 @@ int pqmagic_kyber512_std_dec(
 
 int pqmagic_kyber768_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_kyber768_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 int pqmagic_kyber768_std_enc(
     unsigned char *ct,
     unsigned char *ss,
     const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_kyber768_std_enc_internal(
+    unsigned char *ct, unsigned char *ss,
+    const unsigned char *pk, unsigned char *kem_enc_coins);
 
 int pqmagic_kyber768_std_dec(
     unsigned char *ss,
@@ -1333,10 +1589,24 @@ int pqmagic_kyber768_std_dec(
 
 int pqmagic_kyber1024_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_kyber1024_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 int pqmagic_kyber1024_std_enc(
     unsigned char *ct,
     unsigned char *ss,
     const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_kyber1024_std_enc_internal(
+    unsigned char *ct, unsigned char *ss,
+    const unsigned char *pk, unsigned char *kem_enc_coins);
 
 int pqmagic_kyber1024_std_dec(
     unsigned char *ss,
@@ -1358,10 +1628,24 @@ int pqmagic_kyber1024_std_dec(
 
 int pqmagic_aigis_enc_1_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_enc_1_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 int pqmagic_aigis_enc_1_std_enc(
     unsigned char *ct,
     unsigned char *ss,
     const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_enc_1_std_enc_internal(
+    unsigned char *ct, unsigned char *ss,
+    const unsigned char *pk, unsigned char *kem_enc_coins);
 
 int pqmagic_aigis_enc_1_std_dec(
     unsigned char *ss,
@@ -1375,10 +1659,24 @@ int pqmagic_aigis_enc_1_std_dec(
 
 int pqmagic_aigis_enc_2_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_enc_2_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 int pqmagic_aigis_enc_2_std_enc(
     unsigned char *ct,
     unsigned char *ss,
     const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_enc_2_std_enc_internal(
+    unsigned char *ct, unsigned char *ss,
+    const unsigned char *pk, unsigned char *kem_enc_coins);
 
 int pqmagic_aigis_enc_2_std_dec(
     unsigned char *ss,
@@ -1392,10 +1690,24 @@ int pqmagic_aigis_enc_2_std_dec(
 
 int pqmagic_aigis_enc_3_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_enc_3_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 int pqmagic_aigis_enc_3_std_enc(
     unsigned char *ct,
     unsigned char *ss,
     const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_enc_3_std_enc_internal(
+    unsigned char *ct, unsigned char *ss,
+    const unsigned char *pk, unsigned char *kem_enc_coins);
 
 int pqmagic_aigis_enc_3_std_dec(
     unsigned char *ss,
@@ -1409,10 +1721,24 @@ int pqmagic_aigis_enc_3_std_dec(
 
 int pqmagic_aigis_enc_4_std_keypair(unsigned char *pk, unsigned char *sk);
 
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_enc_4_std_keypair_internal(
+    unsigned char *pk, unsigned char *sk,
+    unsigned char *keypair_coins);
+
 int pqmagic_aigis_enc_4_std_enc(
     unsigned char *ct,
     unsigned char *ss,
     const unsigned char *pk);
+
+/*
+ * Internal Method
+ */
+int pqmagic_aigis_enc_4_std_enc_internal(
+    unsigned char *ct, unsigned char *ss,
+    const unsigned char *pk, unsigned char *kem_enc_coins);
 
 int pqmagic_aigis_enc_4_std_dec(
     unsigned char *ss,

@@ -19,12 +19,26 @@ message(STATUS "Use PQMagic-${PQMAGIC_VERSION}")
 # Check OS platform
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Windows
-    set(LIBRARY_PREFIX "")
+    set(LIBRARY_PREFIX "lib")
     message(STATUS "Operating System: ${CMAKE_SYSTEM_NAME}.")
-    set(STATIC_LIB_SUFFIX ".lib")   
-    set(DYNAMIC_LIB_SUFFIX ".dll")  
-    # set(IMPORT_LIB_SUFFIX ".lib")
-    set(COMMAND_AR ${CMAKE_AR})
+    
+    # Handle different compilers on Windows
+    if(MSVC)
+        # MSVC compiler
+        set(STATIC_LIB_SUFFIX ".lib")
+        set(DYNAMIC_LIB_SUFFIX ".dll")
+        set(COMMAND_AR ${CMAKE_AR})
+    elseif(MINGW)
+        # MinGW compiler
+        set(STATIC_LIB_SUFFIX ".a")
+        set(DYNAMIC_LIB_SUFFIX ".dll")
+        set(COMMAND_AR ${CMAKE_AR})
+    else()
+        # Default to MSVC style if compiler not recognized (e.g., clang)
+        set(STATIC_LIB_SUFFIX ".lib")
+        set(DYNAMIC_LIB_SUFFIX ".dll")
+        set(COMMAND_AR ${CMAKE_AR})
+    endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # Linux
     set(LIBRARY_PREFIX "lib") 
@@ -134,8 +148,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Set global compile options
     add_compile_options(
         -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow
-        -Wpointer-arith -Wa,--noexecstack -fomit-frame-pointer -O3 -mtune=native
-        -march=native -finline-functions
+        -Wpointer-arith -fomit-frame-pointer -O3 -mtune=native
+        -march=native -finline-functions -z noexecstack
     )
 else()
     # Set global compile options
