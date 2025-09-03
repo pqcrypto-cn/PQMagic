@@ -152,7 +152,17 @@ message(STATUS "Compile each algorithm components into shared/static library: DI
 endif()
 
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+# Check if compiling for Android
+if(ANDROID)
+    # Android-specific compile options
+    # Disable -march=native on Android as it causes compilation issues
+    # Android devices have diverse architectures and cross-compilation requires generic settings
+    message(STATUS "Android build detected - using generic optimization flags")
+    add_compile_options(
+        -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow -fPIC
+        -Wpointer-arith -Wa,--noexecstack -fomit-frame-pointer -O3 -finline-functions
+    )
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Set global compile options
     if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         # For MSVC, we can't directly use march=native equivalent
