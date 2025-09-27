@@ -153,15 +153,36 @@ endif()
 
 
 # Check if compiling for Android
-if(ANDROID)
+if(CMAKE_SYSTEM_NAME STREQUAL "Android")
     # Android-specific compile options
     # Disable -march=native on Android as it causes compilation issues
     # Android devices have diverse architectures and cross-compilation requires generic settings
     message(STATUS "Android build detected - using generic optimization flags")
+
+    # Base Android compilation flags (generic optimizations, no -march=native)
     add_compile_options(
         -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow -fPIC
         -Wpointer-arith -Wa,--noexecstack -fomit-frame-pointer -O3 -finline-functions
     )
+
+    # Apply ABI-specific optimizations based on CMAKE_ANDROID_ARCH_ABI
+    if(CMAKE_ANDROID_ARCH_ABI)
+        message(STATUS "Android ABI: ${CMAKE_ANDROID_ARCH_ABI}")
+
+        if(CMAKE_ANDROID_ARCH_ABI STREQUAL "armeabi-v7a")
+            add_compile_options(-mfpu=neon -mfloat-abi=softfp)
+        elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL "arm64-v8a")
+            add_compile_options(-march=armv8-a)
+        elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL "x86")
+            add_compile_options(-march=i686 -mtune=generic -mssse3 -mfpmath=sse)
+        elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL "x86_64")
+            add_compile_options(-march=x86-64 -mtune=generic -msse4.2 -mpopcnt)
+        else()
+            message(STATUS "Unknown Android ABI: ${CMAKE_ANDROID_ARCH_ABI}, using generic flags")
+        endif()
+    else()
+        message(STATUS "CMAKE_ANDROID_ARCH_ABI not set, using generic Android flags")
+    endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Set global compile options
     if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
