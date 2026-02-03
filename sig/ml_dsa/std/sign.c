@@ -288,7 +288,11 @@ PQMAGIC_EXPORT int crypto_sign_signature(
   memcpy(m_extended + 2, ctx, ctx_len);
   memcpy(m_extended + 2 + ctx_len, m, mlen);
 
-  return crypto_sign_signature_internal(sig, siglen, m_extended, mlen + ctx_len + 2, coins, sk);
+  int ret = crypto_sign_signature_internal(sig, siglen, m_extended, mlen + ctx_len + 2, coins, sk);
+  
+  free(m_extended);
+  m_extended = NULL;
+  return ret;
 }
 
 /*************************************************
@@ -491,7 +495,11 @@ PQMAGIC_EXPORT int crypto_sign_verify(
   memcpy(m_extended + 2, ctx, ctx_len);
   memcpy(m_extended + 2 + ctx_len, m, mlen);
 
-  return crypto_sign_verify_internal(sig, siglen, m_extended, mlen + ctx_len + 2, pk);
+  int ret = crypto_sign_verify_internal(sig, siglen, m_extended, mlen + ctx_len + 2, pk);
+
+  free(m_extended);
+  m_extended = NULL;
+  return ret;
 }
 
 /*************************************************
