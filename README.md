@@ -1,10 +1,12 @@
 # PQMagic
 
-[PQMagic](https://pqcrypto.dev/)（Post-Quantum Magic）是**国内首个**支持 [FIPS 203 204 205 标准](https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved) 的**高性能安全后量子密码算法库**，并支持性能更高效的**国产自研** PQC 算法 **Aigis-Enc、Aigis-Sig**（[PKC 2020]((https://eprint.iacr.org/2019/510))）和 **SPHINCS-Alpha**（[CRYPTO 2023](https://eprint.iacr.org/2022/059)）。同时 PQMagic 对所有算法的底层哈希函数进行国密改造，更好地满足国内标准需求，同时也与国际标准无缝衔接，做到了完全自主可控。该项目由郁昱教授团队（[上海交通大学](https://crypto.sjtu.edu.cn/lab/) 、[上海期智研究院](https://sqz.ac.cn/password-48)）开发和维护，旨在提供自主、可控、安全、高性能的 PQC 算法，以及为后量子密码迁移工作提供解决方案。
+[PQMagic](https://pqcrypto.dev/)（Post-Quantum Magic）是**国内首个**支持 [FIPS 203 204 205 标准](https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved) 的**高性能安全后量子密码算法库**，并支持性能更高效的**国产自研** PQC 算法 **Aigis-Enc、Aigis-Sig**（[PKC 2020]((https://eprint.iacr.org/2019/510))）和 **SPHINCS-Alpha**（[CRYPTO 2023](https://eprint.iacr.org/2022/059)）。同时 PQMagic 对所有算法的底层哈希函数进行国密改造，更好地满足国内标准需求，同时也与国际标准无缝衔接，做到了完全自主可控。该项目由郁昱教授团队（[上海交通大学](https://crypto.sjtu.edu.cn/lab/)
+、[上海期智研究院](https://sqz.ac.cn/password-48)
+）和李卷孺研究员团队（[华东师范大学](https://faculty.ecnu.edu.cn/_s54/ljr2/main.psp)）共同开发维护，旨在提供自主、可控、安全、高性能的 PQC 算法，以及为后量子密码迁移工作提供解决方案。
 
 [PQMagic](https://pqcrypto.dev/) (Post-Quantum Magic) is the first **high-performance post-quantum cryptographic algorithm library** that supports both the [FIPS 203 204 205](https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved) standards in China, and it supports the higher performance PQC algorithms designed by us: **Aigis-Enc、Aigis-Sig** ([PKC 2020]((https://eprint.iacr.org/2019/510))) and **SPHINCS-Alpha** ([CRYPTO 2023](https://eprint.iacr.org/2022/059)). PQMagic has implemented cryptographic modifications to the **Hash Function Components** of all algorithms, better aligning with Chinese standards while seamlessly integrating with international standards.
 
-This project is developed and maintained by Professor Yu Yu's team from the [Shanghai Jiao Tong University](https://crypto.sjtu.edu.cn/lab/) and the [Shanghai Qi Zhi Institute]((https://sqz.ac.cn/password-48)). It aims to provide secure and **high-performance** PQC algorithms, offers solutions for post-quantum cryptography migration in various scenarios.
+This project was jointly developed and maintained by Professor Yu Yu's team ([Shanghai Jiao Tong University](https://crypto.sjtu.edu.cn/lab/), [Shanghai Qi Zhi Institute]((https://sqz.ac.cn/password-48))) and Researcher Li Juanru's team ([East China Normal University](https://faculty.ecnu.edu.cn/_s54/ljr2/main.psp)). It aims to provide secure and **high-performance** PQC algorithms, offers solutions for post-quantum cryptography migration in various scenarios.
 
 ## 性能（Performance）
 
