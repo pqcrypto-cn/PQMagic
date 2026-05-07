@@ -12,10 +12,10 @@
 
 ## 1. 先构建 PQMagic 库
 
-在仓库根目录（绝对路径）执行：
+在仓库根目录执行：
 
 ```bash
-cd /home/runner/work/PQMagic/PQMagic
+cd <repository_root>
 cmake -S . -B /tmp/pqmagic-build -DCMAKE_BUILD_TYPE=Release
 cmake --build /tmp/pqmagic-build -j
 ```
@@ -26,10 +26,10 @@ cmake --build /tmp/pqmagic-build -j
 ## 2. 构建 provider
 
 ```bash
-cd /home/runner/work/PQMagic/PQMagic
-cmake -S /home/runner/work/PQMagic/PQMagic/pqmagic-provider \
+cd <repository_root>
+cmake -S <repository_root>/pqmagic-provider \
       -B /tmp/pqmagic-provider-build \
-      -DPQMAGIC_INCLUDE_DIR=/home/runner/work/PQMagic/PQMagic/include \
+      -DPQMAGIC_INCLUDE_DIR=<repository_root>/include \
       -DPQMAGIC_LIB=/tmp/pqmagic-build/libpqmagic_std.a
 cmake --build /tmp/pqmagic-provider-build -j
 ```
