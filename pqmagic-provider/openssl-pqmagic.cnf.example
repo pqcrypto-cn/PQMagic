@@ -1,0 +1,15 @@
+openssl_conf = openssl_init
+
+[openssl_init]
+providers = provider_sect
+
+[provider_sect]
+default = default_sect
+pqmagic = pqmagic_sect
+
+[default_sect]
+activate = 1
+
+[pqmagic_sect]
+activate = 1
+module = /absolute/path/to/pqmagicprov.so
