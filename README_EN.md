@@ -2,7 +2,7 @@
 
 [PQMagic](https://pqcrypto.dev/) (Post-Quantum Magic) is the first **high-performance post-quantum cryptographic algorithm library** that supports both the [FIPS 203 204 205](https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved) standards in China, and it supports the higher performance PQC algorithms designed by us: **Aigis-Enc、Aigis-Sig** ([PKC 2020]((https://eprint.iacr.org/2019/510))) and **SPHINCS-Alpha** ([CRYPTO 2023](https://eprint.iacr.org/2022/059)). PQMagic has implemented cryptographic modifications to the **Hash Function Components** of all algorithms, better aligning with Chinese standards while seamlessly integrating with international standards.
 
-This project is developed and maintained by Professor Yu Yu's team from the [Shanghai Jiao Tong University](https://crypto.sjtu.edu.cn/lab/) and the [Shanghai Qi Zhi Institute]((https://sqz.ac.cn/password-48)) and Professor Juanru Li's team from the [East China Normal University](https://faculty.ecnu.edu.cn/_s54/ljr2/main.psp)). It aims to provide secure and **high-performance** PQC algorithms, offers solutions for post-quantum cryptography migration in various scenarios.
+This project is developed and maintained by Professor Yu Yu's team from the [Shanghai Jiao Tong University](https://crypto.sjtu.edu.cn/lab/) and the [Shanghai Qi Zhi Institute](https://sqz.ac.cn/password-48) and Professor Juanru Li's team from the [East China Normal University](https://faculty.ecnu.edu.cn/_s54/ljr2/main.psp). It aims to provide secure and **high-performance** PQC algorithms, offers solutions for post-quantum cryptography migration in various scenarios.
 
 ## Version Support
 
