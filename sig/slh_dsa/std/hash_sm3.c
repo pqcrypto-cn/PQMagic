@@ -45,14 +45,15 @@ void gen_message_random(unsigned char *R, const unsigned char *sk_prf,
 {
     (void)ctx;
 
-    unsigned char buf[SPX_N + mlen];
     unsigned char outbuf[SM3_HMAC_SIZE];
+    SM3_HMAC_CTX hctx;
 
     // optrand || M
-    memcpy(buf, optrand, SPX_N);
-    memcpy(buf + SPX_N, m, mlen);
+    sm3_hmac_init(&hctx, (u1 *)sk_prf, SPX_N);
+    sm3_hmac_update(&hctx, optrand, SPX_N);
+    sm3_hmac_update(&hctx, m, (size_t)mlen);
+    sm3_hmac_final(&hctx, outbuf);
 
-    sm3_hmac(buf, SPX_N + mlen, sk_prf, SPX_N, outbuf);
     memcpy(R, outbuf, SPX_N);
 }
 
@@ -78,14 +79,14 @@ void hash_message(unsigned char *digest, uint64_t *tree, uint32_t *leaf_idx,
     unsigned char buf[SPX_DGST_BYTES];
     unsigned char *bufp = buf;
 
-    unsigned char r_pk_m[SPX_N + SPX_PK_BYTES + mlen];
+    SM3_CTX sm3_ctx;
 
     // SM3(R ‖ PK.seed ‖ PK.root ‖ M)
-    memcpy(r_pk_m, R, SPX_N);
-    memcpy(r_pk_m + SPX_N, pk, SPX_PK_BYTES);
-    memcpy(r_pk_m + SPX_N + SPX_PK_BYTES, m, mlen);
-    // sm3_extended(seed + 2*SPX_N, SPX_SM3_OUTPUT_BYTES, r_pk_m, SPX_N + SPX_PK_BYTES + mlen);
-    sm3(r_pk_m, SPX_N + SPX_PK_BYTES + mlen, seed + 2*SPX_N);
+    sm3_init(&sm3_ctx);
+    sm3_update(&sm3_ctx, R, SPX_N);
+    sm3_update(&sm3_ctx, pk, SPX_PK_BYTES);
+    sm3_update(&sm3_ctx, m, (size_t)mlen);
+    sm3_final(&sm3_ctx, seed + 2*SPX_N);
 
     // H_msg: MGF1-SHA-X(R ‖ PK.seed ‖ seed)
     memcpy(seed, R, SPX_N);
