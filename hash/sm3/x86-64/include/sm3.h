@@ -2,21 +2,7 @@
 #ifndef __sm3_h__
 #define __sm3_h__
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdint.h>
-#include<string.h>
-
-typedef unsigned long long	u8;
-typedef unsigned int		u4;
-typedef unsigned short		u2;
-typedef unsigned char		u1;
-
-// All in bytes
-#define SM3_BLOCK_SIZE      64
-#define SM3_DIGEST_LENGTH	32
-#define SM3_HMAC_SIZE	    32
-#define SM3_CBLOCK	        (SM3_BLOCK_SIZE)
+#include "include/sm_config.h"
 
 typedef struct _SM3_CTX
 {
