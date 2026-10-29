@@ -11,12 +11,13 @@
  * Perform SM3 hash.
  */
 size_t sm3(const uint8_t *data, size_t datalen, uint8_t dgst[SM3_DIGEST_LENGTH]);
+
 /**
  * Perform HMAC based on SM3 hash function.
  */
 size_t sm3_hmac(
-    const uint8_t * data, size_t datalen, 
-    const uint8_t * key, size_t key_len, 
+    const uint8_t *data, size_t datalen,
+    const uint8_t *key, size_t key_len,
     uint8_t mac[SM3_HMAC_SIZE]);
 
 #endif

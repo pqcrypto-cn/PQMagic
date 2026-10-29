@@ -216,7 +216,7 @@ size_t sm3(const u1 *data, size_t datalen, u1 dgst[SM3_DIGEST_LENGTH])
 
 #define IPAD	0x36
 #define OPAD	0x5C
-void sm3_hmac_init(SM3_HMAC_CTX *ctx, u1 *key, size_t keylen)
+void sm3_hmac_init(SM3_HMAC_CTX *ctx, const u1 *key, size_t keylen)
 {
 	int i = 0;
 
@@ -261,7 +261,7 @@ void sm3_hmac_final(SM3_HMAC_CTX *ctx, u1 mac[SM3_HMAC_SIZE])
 	sm3_final(&ctx->sm3_ctx, mac);
 }
 
-size_t sm3_hmac(const u1 *data, size_t data_len, u1 *key, size_t key_len, u1 mac[SM3_HMAC_SIZE])
+size_t sm3_hmac(const u1 *data, size_t data_len, const u1 *key, size_t key_len, u1 mac[SM3_HMAC_SIZE])
 {
 	SM3_HMAC_CTX ctx;
 	sm3_hmac_init(&ctx, key, key_len);

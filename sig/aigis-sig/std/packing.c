@@ -136,7 +136,7 @@ int unpack_sig(polyvecl *z,
                 const unsigned char sig[SIG_SIZE_PACKED])
 {
   unsigned int i, j, k;
-  uint64_t signs, mask;
+  uint64_t signs, mask, used;
 
   for(i = 0; i < PARAM_L; ++i)
     polyz_unpack(z->vec+i, sig + i*POLZ_SIZE_PACKED);
@@ -178,13 +178,19 @@ int unpack_sig(polyvecl *z,
     signs |= (uint64_t)sig[PARAM_N/8+i] << 8*i;
 
   mask = 1;
+  used = 0;
   for(i = 0; i < PARAM_N/8; ++i) {
     for(j = 0; j < 8; ++j) {
       if((sig[i] >> j) & 0x01) {
         c->coeffs[8*i+j] = (signs & mask) ? PARAM_Q - 1 : 1;
         mask <<= 1;
+        used++;
       }
     }
+  }
+
+  if(used < 64 && (signs >> used) != 0) {
+    return 1;
   }
   
   return 0;

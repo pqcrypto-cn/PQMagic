@@ -470,7 +470,7 @@ PQMAGIC_EXPORT int crypto_sign_verify_internal(
   polyvecl mat[PARAM_K], z;
   polyveck t1, w1, h, tmp1, tmp2;
 
-  if(siglen < CRYPTO_BYTES)
+  if(siglen != CRYPTO_BYTES)
     return -1;
 
   unpack_pk(rho, &t1, pk);
