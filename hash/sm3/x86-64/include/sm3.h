@@ -41,10 +41,10 @@ typedef struct _SM3_HMAC_CTX
 
 } SM3_HMAC_CTX;
 
-void sm3_hmac_init(SM3_HMAC_CTX *ctx, u1 *key, size_t key_len);
+void sm3_hmac_init(SM3_HMAC_CTX *ctx, const u1 *key, size_t key_len);
 void sm3_hmac_update(SM3_HMAC_CTX *ctx, const u1 *data, size_t data_len);
 void sm3_hmac_final(SM3_HMAC_CTX *ctx, u1 mac[SM3_HMAC_SIZE]);
-size_t sm3_hmac(const u1 * data, size_t datalen, u1 * key, size_t key_len, u1 mac[SM3_HMAC_SIZE]);
+size_t sm3_hmac(const u1 *data, size_t datalen, const u1 *key, size_t key_len, u1 mac[SM3_HMAC_SIZE]);
 
 
 #endif // end of sm3.h

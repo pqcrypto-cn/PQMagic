@@ -6,6 +6,7 @@
 #include "params.h"
 #include "hash.h"
 #include "spx_sm3.h"
+#include "hash/sm3/x86-64/include/sm3.h"
 
 /* For SHAKE256, there is no immediate reason to initialize at the start,
    so this function is an empty operation. */
@@ -49,10 +50,11 @@ void gen_message_random(unsigned char *R, const unsigned char *sk_prf,
     SM3_HMAC_CTX hctx;
 
     // optrand || M
-    sm3_hmac_init(&hctx, (u1 *)sk_prf, SPX_N);
+    sm3_hmac_init(&hctx, sk_prf, SPX_N);
     sm3_hmac_update(&hctx, optrand, SPX_N);
     sm3_hmac_update(&hctx, m, (size_t)mlen);
     sm3_hmac_final(&hctx, outbuf);
+    memset(&hctx, 0, sizeof(hctx));
 
     memcpy(R, outbuf, SPX_N);
 }

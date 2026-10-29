@@ -10,6 +10,7 @@
 // #define SHOW_MSG
 
 void multi_random_msg_correctness(void);
+static int noncanonical_signature_rejection(void);
 
 /*
 void single_msg_correctness(void);
@@ -203,9 +204,65 @@ void multi_random_msg_correctness(void) {
   printf("================= Finish aigis sign/verify test ================\n");
 }
 
+static int noncanonical_signature_rejection(void)
+{
+  uint8_t message[MLEN] = {0};
+  uint8_t context[MLEN] = {0};
+  uint8_t public_key[SIG_PUBLICKEYBYTES];
+  uint8_t secret_key[SIG_SECRETKEYBYTES];
+  uint8_t signature[SIG_BYTES + 1];
+  uint8_t noncanonical_signature[SIG_BYTES];
+  size_t signature_length;
+
+  randombytes(message, sizeof(message));
+  randombytes(context, sizeof(context));
+
+  if(crypto_sign_keypair(public_key, secret_key) != 0) {
+    fprintf(stderr, "[ERROR] Failed to generate a key pair for encoding tests.\n");
+    return -1;
+  }
+
+  if(crypto_sign_signature(signature, &signature_length,
+                           message, sizeof(message),
+                           context, sizeof(context), secret_key) != 0 ||
+     signature_length != SIG_BYTES) {
+    fprintf(stderr, "[ERROR] Failed to generate a signature for encoding tests.\n");
+    return -1;
+  }
+
+  if(crypto_sign_verify(signature, signature_length,
+                        message, sizeof(message),
+                        context, sizeof(context), public_key) != 0) {
+    fprintf(stderr, "[ERROR] A valid detached signature was rejected.\n");
+    return -1;
+  }
+
+  signature[SIG_BYTES] = 0;
+  if(crypto_sign_verify(signature, SIG_BYTES + 1,
+                        message, sizeof(message),
+                        context, sizeof(context), public_key) == 0) {
+    fprintf(stderr, "[ERROR] A signature with trailing data was accepted.\n");
+    return -1;
+  }
+
+  memcpy(noncanonical_signature, signature, SIG_BYTES);
+  noncanonical_signature[SIG_BYTES - 1] |= 0xF0;
+  if(crypto_sign_verify(noncanonical_signature, SIG_BYTES,
+                        message, sizeof(message),
+                        context, sizeof(context), public_key) == 0) {
+    fprintf(stderr, "[ERROR] A signature with unused sign bits was accepted.\n");
+    return -1;
+  }
+
+  return 0;
+}
+
 
 int main(void)
 {
+  if(noncanonical_signature_rejection() != 0) {
+    return 1;
+  }
 
   multi_random_msg_correctness();
 //   single_msg_correctness();
