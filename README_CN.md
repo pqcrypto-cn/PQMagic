@@ -9,10 +9,16 @@
 | ML-KEM (FIPS 203)    |  ✅          |  ✅                  |
 | Kyber     |  ✅          |  ✅                  |
 | Aigis-enc |  ✅          |  ✅                  |
+| Aigis-Enc+（Reference） | ✅ | — |
+| NEV（Reference） | ✅ | — |
+| QIMEN-PIKE（Reference） | ✅ | — |
+| NEV-AKE（Reference，密钥交换） | ✅ | — |
 | ML-DSA (FIPS 204)    |  ✅          |  ✅                  |
 | SLH-DSA (FIPS 205)   |  ✅          |  ✅                  |
 | Dilithium |  ✅          |  ✅                  |
 | Aigis-sig |  ✅          |  ✅                  |
+| Aigis-Sig+（Reference） | ✅ | — |
+| ReSolveD-alpha（Reference） | ✅ | — |
 | SPHINCS-Alpha |  ✅          |  ✅                  |
 | 特性       | 跨平台/架构 高度兼容 | 针对x64（海光）、ARM（飞腾）等定制高性能优化版本 |
 | 源码       | 开源于本仓库及[Gitee](https://gitee.com/pqcrypto/pqmagic) | 请[联系我们](#联系我们)获取进阶版支持 |
@@ -44,6 +50,8 @@ PQMagic-std 和 PQMagic-adv 版本的其余详细测试数据请见官网 https:
 ## 编译使用
 
 ### 使用CMake
+
+- QIMEN-PIKE 的 Reference 实现依赖 GMP；启用 `ENABLE_QIMEN_PIKE`（默认开启）时，请先安装 GMP 开发库。
 
 - 执行下述命令：
   
@@ -98,6 +106,9 @@ PQMagic-std 和 PQMagic-adv 版本的其余详细测试数据请见官网 https:
   - Aigis-sig: 可以选取 `AIGIS_SIG_MODE` 为 `1,2,3`（默认为全部）
   - SPHINCS-Alpha: 可以选取 `SPHINCS_A_MODE` 默认为 SHA2/SHAKE 哈希的全部模式(`[128|192|256][f|s]`)以及 SM3 的 `128f/s` 模式
   - 可以通过设置 `ENABLE_ML_KEM`、`ENABLE_KYBER`、`ENABLE_AIGIS_ENC`、`ENABLE_ML_DSA`、`ENABLE_SLH_DSA`、`ENABLE_DILITHIUM`、`ENABLE_AIGIS_SIG` 和 `ENABLE_SPHINCS_A`为 `OFF` 来移除相应的算法（默认均为`ON`）
+  - 新增 Reference 实现可分别通过 `ENABLE_AIGIS_ENC_PLUS`、`ENABLE_NEV`、`ENABLE_QIMEN_PIKE`、`ENABLE_NEV_AKE`、`ENABLE_AIGIS_SIG_PLUS` 和 `ENABLE_RESOLVED_ALPHA` 控制（默认均为 `ON`）
+  - `NEV-AKE` 是认证密钥交换协议，不是 KEM，因此源码位于 `kex/nev-ake/std`；QIMEN-PIKE 是 KEM，源码位于 `kem/qimen-pike/std`；其余新增算法分别位于 `kem` 或 `sig` 目录
+  - 使用 `-DENABLE_KAT=ON` 构建新增算法的已知答案测试；构建后可在 `build` 目录执行 `ctest --output-on-failure`
 
 ### 使用 Makefile
 

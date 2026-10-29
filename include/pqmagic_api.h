@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "pqmagic_reference_api.h"
 
 /*
     ML-DSA API START

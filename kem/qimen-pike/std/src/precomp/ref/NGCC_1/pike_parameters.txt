@@ -1,0 +1,8 @@
+lvl = 3
+p = 0x588ee91ac23ef552f7bea02286b19c0bf3bb9a90588643dadd9997fbe0daea16974b919e94cbe0b3ffffffffffffffffffffffffffffffffffffffff
+B = 13
+ppofactor = [3, 7]
+Cfactor = 11
+use_cfactor = 1
+use_twist = 1
+TORSION_D = 0xa9884081fc61c3910dd29f8b9a278f64abd4a91bcbcaf

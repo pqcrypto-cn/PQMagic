@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: Apache-2.0
+
+if (CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -nostdlib")
+endif()
+
+if (SOURCE_PATH)
+	set(SOURCE_FINAL_PATH ${SOURCE_PATH})
+else()
+	set(SOURCE_FINAL_PATH ${PROJECT_BINARY_DIR}/src)
+endif()
+
+
+include(GNUInstallDirs)
+include(CheckSymbolExists)
+include(CMakePushCheckState)
+
+set(STRICT_OPTIONS_CPP )
+set(STRICT_OPTIONS_C )
+set(STRICT_OPTIONS_CXX )
+if(MSVC)
+	if(ENABLE_STRICT)
+		set(STRICT_OPTIONS_CPP "${STRICT_OPTIONS_CPP} /WX /Zc:__cplusplus")
+	endif()
+else()
+	set(STRICT_OPTIONS_CXX "${STRICT_OPTIONS_CXX} -std=c++14 -O2")
+	set(STRICT_OPTIONS_CPP "${STRICT_OPTIONS_CPP} -Wall -Wuninitialized -Wno-deprecated-declarations -Wno-missing-field-initializers")
+	if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+		set(STRICT_OPTIONS_C "${STRICT_OPTIONS_C} -O3")
+	endif()
+	set(STRICT_OPTIONS_C "${STRICT_OPTIONS_C} -std=c99 -Wno-error=strict-prototypes -fvisibility=hidden -funroll-loops -Wno-error=implicit-function-declaration -Wno-error=attributes")
+	if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+		set(STRICT_OPTIONS_CPP "${STRICT_OPTIONS_CPP} -Wno-error=unknown-warning-option -Qunused-arguments -Wno-tautological-compare")
+		set(STRICT_OPTIONS_CPP "${STRICT_OPTIONS_CPP} -Wno-unused-function -Wno-pass-failed")
+	endif()
+	if(ENABLE_STRICT)
+		set(STRICT_OPTIONS_C "${STRICT_OPTIONS_C} -Werror -Wextra -Wno-unused-parameter -fno-strict-aliasing")
+	endif()
+endif()
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${STRICT_OPTIONS_C}")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${STRICT_OPTIONS_CXX} ${STRICT_OPTIONS_CPP}")

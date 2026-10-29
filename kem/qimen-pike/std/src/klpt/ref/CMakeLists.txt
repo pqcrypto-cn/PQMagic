@@ -1,0 +1,3 @@
+set(KLPTX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/klptx)
+
+include(${SELECT_PIKE_VARIANT})

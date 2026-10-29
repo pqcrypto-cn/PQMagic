@@ -1,0 +1,12 @@
+add_subdirectory(common)
+add_subdirectory(intbig)
+add_subdirectory(quaternion)
+add_subdirectory(precomp)
+add_subdirectory(klpt)
+add_subdirectory(gf)
+add_subdirectory(ec)
+
+add_subdirectory(id2iso)
+add_subdirectory(hd)
+add_subdirectory(pike)
+add_subdirectory(ngcc)

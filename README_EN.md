@@ -11,10 +11,16 @@ This project is developed and maintained by Professor Yu Yu's team from the [Sha
 | ML-KEM (FIPS 203)    |  ✅          |  ✅                  |
 | Kyber       |  ✅          |  ✅                  |
 | Aigis-enc |  ✅          |  ✅                  |
+| Aigis-Enc+ (Reference) | ✅ | — |
+| NEV (Reference) | ✅ | — |
+| QIMEN-PIKE (Reference) | ✅ | — |
+| NEV-AKE (Reference, key exchange) | ✅ | — |
 | ML-DSA (FIPS 204)    |  ✅          |  ✅                  |
 | SLH-DSA (FIPS 205)   |  ✅          |  ✅                  |
 | Dilithium   |  ✅          |  ✅                  |
 | Aigis-sig   |  ✅          |  ✅                  |
+| Aigis-Sig+ (Reference) | ✅ | — |
+| ReSolveD-alpha (Reference) | ✅ | — |
 | SPHINCS-Alpha |  ✅          |  ✅                  |
 | Feature     | Cross platform/arch, high compatibility | Customized optimization for x64 (Hygon), ARM (FeiTeng), etc. |
 | Source Code |  Open-sourced in this repo and [gitee](https://gitee.com/pqcrypto/pqmagic) | Please [contact us](#contact-us) for advanced support |
@@ -46,6 +52,8 @@ Please refer to our website (https://pqcrypto.dev/benchmarking/) to see more det
 ## Usage
 
 ### Use CMake
+
+- The QIMEN-PIKE reference implementation requires GMP. Install the GMP development package when `ENABLE_QIMEN_PIKE` is enabled (the default).
 
 - Use following command:
   
@@ -100,6 +108,9 @@ Please refer to our website (https://pqcrypto.dev/benchmarking/) to see more det
   - Aigis-sig: One can set `AIGIS_SIG_MODE` as `1,2,3` (default set all) to change different Aigis-sig parameters.
   - SPHINCS-Alpha: One can set `SPHINCS_A_MODE` as `[128|192|256][f|s]` mode with SHA2/SHAKE and `128f/s` with SM3
   - Set `ENABLE_ML_KEM`、`ENABLE_KYBER`、`ENABLE_AIGIS_ENC`、`ENABLE_ML_DSA`、`ENABLE_SLH_DSA`、`ENABLE_DILITHIUM`、`ENABLE_AIGIS_SIG` or `ENABLE_SPHINCS_A` as `OFF` to remove related algorithm out of the compiled binaries and libraries (default `ON`).
+  - The new reference implementations can be controlled with `ENABLE_AIGIS_ENC_PLUS`, `ENABLE_NEV`, `ENABLE_QIMEN_PIKE`, `ENABLE_NEV_AKE`, `ENABLE_AIGIS_SIG_PLUS`, and `ENABLE_RESOLVED_ALPHA` (all default to `ON`).
+  - `NEV-AKE` is an authenticated key-exchange protocol rather than a KEM, so it is located under `kex/nev-ake/std`; QIMEN-PIKE is a KEM under `kem/qimen-pike/std`; the other additions live under `kem` or `sig`.
+  - Configure with `-DENABLE_KAT=ON` to build the new known-answer tests, then run `ctest --output-on-failure` from the build directory.
 
 ### Use Makefile
 

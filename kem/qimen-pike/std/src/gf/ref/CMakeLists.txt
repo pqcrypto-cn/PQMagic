@@ -1,0 +1,3 @@
+set(GFX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/gfx)
+
+include(${SELECT_PIKE_VARIANT})

@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 # PQMagic version.
 project(PQMagic)
 
+enable_testing()
+
 # Set c standard
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_C_STANDARD 11)
@@ -101,24 +103,36 @@ set(SPHINCS_A_THASH ${DEFAULT_THASH} CACHE STRING "Selected thash mode(s) for SP
 option(ENABLE_KYBER "Enable Kyber" ON)
 option(ENABLE_ML_KEM "Enable ML-KEM" ON)
 option(ENABLE_AIGIS_ENC "Enable Aigis-enc" ON)
+option(ENABLE_AIGIS_ENC_PLUS "Enable Aigis-Enc+ reference implementation" ON)
+option(ENABLE_NEV "Enable NEV reference implementation" ON)
+option(ENABLE_QIMEN_PIKE "Enable QIMEN-PIKE reference implementation" ON)
+option(ENABLE_NEV_AKE "Enable NEV-AKE reference implementation" ON)
 ## SIG
 option(ENABLE_DILITHIUM "Enable Dilithium" ON)
 option(ENABLE_ML_DSA "Enable ML-DSA" ON)
 option(ENABLE_AIGIS_SIG "Enable Aigis-sig" ON)
 option(ENABLE_SLH_DSA "Enable SLH-DSA" ON)
 option(ENABLE_SPHINCS_A "Enable SPHINCS-Alpha" ON)
+option(ENABLE_AIGIS_SIG_PLUS "Enable Aigis-Sig+ reference implementation" ON)
+option(ENABLE_RESOLVED_ALPHA "Enable ReSolveD-alpha reference implementation" ON)
 
 if(
     NOT ENABLE_KYBER AND 
     NOT ENABLE_ML_KEM AND
     NOT ENABLE_AIGIS_ENC AND
+    NOT ENABLE_AIGIS_ENC_PLUS AND
+    NOT ENABLE_NEV AND
+    NOT ENABLE_QIMEN_PIKE AND
+    NOT ENABLE_NEV_AKE AND
     NOT ENABLE_DILITHIUM AND 
     NOT ENABLE_ML_DSA AND
     NOT ENABLE_AIGIS_SIG AND
+    NOT ENABLE_AIGIS_SIG_PLUS AND
+    NOT ENABLE_RESOLVED_ALPHA AND
     NOT ENABLE_SLH_DSA AND
     NOT ENABLE_SPHINCS_A)
 
-    message(FATAL_ERROR "At least enalble one algorithm, or use default config with all algorithm enabled. \nCurrent option: ENABLE_ML_KEM: ${ENABLE_ML_KEM}, ENABLE_KYBER: ${ENABLE_KYBER}, ENABLE_AIGIS_ENC: ${ENABLE_AIGIS_ENC}, ENABLE_ML_DSA: ${ENABLE_ML_DSA}, ENABLE_SLH_DSA: ${ENABLE_SLH_DSA}, ENABLE_DILITHIUM: ${ENABLE_DILITHIUM}, ENABLE_AIGIS_SIG: ${ENABLE_AIGIS_SIG}, ENABLE_SPHINCS_A: ${ENABLE_SPHINCS_A}. \nSupport algorithm: ML-KEM, Kyber, Aigis-enc, ML-DSA, SLH-DSA, Dilithium, Aigis-sig, SPHINCS-Alpha.")
+    message(FATAL_ERROR "Enable at least one algorithm, or use the default configuration with all algorithms enabled.")
 endif()
 
 ## Hash Function
@@ -145,6 +159,38 @@ message(STATUS "Hash Component: SHAKE")
 endif()
 
 option(COMPILE_COMPONENT_LIBRARY "Compile each algorithm components into shared/static library." OFF)
+option(ENABLE_TEST "Enable build test binary" ON)
+option(ENABLE_BENCH "Enable build benchmark binary" ON)
+option(ENABLE_KAT "Enable build test-vector generators for reference implementations" ON)
+
+# The newly imported reference implementations intentionally keep their
+# upstream, parameter-generic source layout.  Some helpers are inactive for a
+# particular parameter set, and the upstream internal functions do not all
+# have standalone prototypes.  Keep the project's strict warnings everywhere
+# else, while allowing those reference sources to build without warning noise.
+if(MSVC)
+    set(PQMAGIC_REFERENCE_WARNING_OPTIONS
+        /wd4100 # unreferenced formal parameter
+        /wd4189 # initialized but unreferenced local variable
+        /wd4505 # unreferenced local function removed
+    )
+else()
+    set(PQMAGIC_REFERENCE_WARNING_OPTIONS
+        -Wno-missing-prototypes
+        -Wno-strict-prototypes
+        -Wno-unused-function
+        -Wno-unused-variable
+        -Wno-unused-parameter
+        -Wno-unused-but-set-variable
+        -Wno-unused-but-set-parameter
+        -Wno-shadow
+        -Wno-sign-compare
+    )
+    if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+        list(APPEND PQMAGIC_REFERENCE_WARNING_OPTIONS -Wno-newline-eof)
+    endif()
+endif()
+
 if(COMPILE_COMPONENT_LIBRARY)
 message(STATUS "Compile each algorithm components into shared/static library: ENABLED")
 else()
@@ -231,6 +277,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 set(PQMAGIC_SHARED_LIB_IMPORT_NAME "${LIBRARY_PREFIX}pqmagic_${PQMAGIC_VERSION}_import${STATIC_LIB_SUFFIX}")
 endif()
 set(SUPPORT_ALG_OBJECT_TARGET "")
+set(PQMAGIC_EXTERNAL_LIBRARIES "")
 
 add_subdirectory(hash/sm3) # Add sm3
 add_subdirectory(hash/keccak) # Add fips202
@@ -254,6 +301,22 @@ if(ENABLE_AIGIS_ENC)
 else()
     message(STATUS "AIGIS-ENC: DISABLED")
 endif()
+if(ENABLE_AIGIS_ENC_PLUS)
+    message(STATUS "AIGIS-ENC+: ENABLED (reference implementation)")
+    add_subdirectory(kem/aigis-enc-plus/${PQMAGIC_VERSION})
+endif()
+if(ENABLE_NEV)
+    message(STATUS "NEV: ENABLED (reference implementation)")
+    add_subdirectory(kem/nev/${PQMAGIC_VERSION})
+endif()
+if(ENABLE_QIMEN_PIKE)
+    message(STATUS "QIMEN-PIKE: ENABLED (reference implementation)")
+    add_subdirectory(kem/qimen-pike/${PQMAGIC_VERSION})
+endif()
+if(ENABLE_NEV_AKE)
+    message(STATUS "NEV-AKE: ENABLED (reference implementation)")
+    add_subdirectory(kex/nev-ake/${PQMAGIC_VERSION})
+endif()
 ## SIG
 if(ENABLE_DILITHIUM)
     message(STATUS "DILITHIUM: ENABLED with mode ${DILITHIUM_MODES}")
@@ -272,6 +335,14 @@ if(ENABLE_AIGIS_SIG)
     add_subdirectory(sig/aigis-sig/${PQMAGIC_VERSION})
 else()
     message(STATUS "AIGIS_SIG: DISABLED")
+endif()
+if(ENABLE_AIGIS_SIG_PLUS)
+    message(STATUS "AIGIS-SIG+: ENABLED (reference implementation)")
+    add_subdirectory(sig/aigis-sig-plus/${PQMAGIC_VERSION})
+endif()
+if(ENABLE_RESOLVED_ALPHA)
+    message(STATUS "RESOLVED-ALPHA: ENABLED (reference implementation)")
+    add_subdirectory(sig/resolved-alpha/${PQMAGIC_VERSION})
 endif()
 if(ENABLE_SLH_DSA)
     message(STATUS "SLH-DSA (FIPS 205): ENABLED with mode ${SLH_DSA_MODES}")
@@ -301,6 +372,8 @@ add_library(
     $<TARGET_OBJECTS:fips202>
 )
 
+target_link_libraries(pqmagic_target PRIVATE ${PQMAGIC_EXTERNAL_LIBRARIES})
+
 add_library(
     pqmagic_static_target STATIC 
     ${SUPPORT_ALG_OBJECT_TARGET}
@@ -308,6 +381,7 @@ add_library(
     $<TARGET_OBJECTS:sm3>
     $<TARGET_OBJECTS:fips202>
 )
+target_link_libraries(pqmagic_static_target PUBLIC ${PQMAGIC_EXTERNAL_LIBRARIES})
 
 # Set library name.
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -524,9 +598,7 @@ function(add_algorithm_bench TARGET_NAME SOURCE_FILE ALG_NAME TYPE MODE)
     endif()
 endfunction()
 
-# TEST and BENCH are default ON
-option(ENABLE_TEST "Enable build test binary" ON)
-option(ENABLE_BENCH "Enable build benchmark binary" ON)
+# TEST, BENCH, and KAT are default ON.
 
 if(ENABLE_TEST)
     message(STATUS "TEST BINARY BUILD: ENABLED")
@@ -837,7 +909,10 @@ install(CODE
 endif()
 
 # Install pqmagic api
-install(FILES include/pqmagic_api.h DESTINATION ${INSTALL_INCLUDE_DIR})
+install(FILES
+    include/pqmagic_api.h
+    include/pqmagic_reference_api.h
+    DESTINATION ${INSTALL_INCLUDE_DIR})
 
 #########################
 # Define clean all rule.#

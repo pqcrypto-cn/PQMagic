@@ -1,0 +1,10 @@
+set(PIKEX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pikex)
+include(${SELECT_PIKE_VARIANT})
+
+if(ENABLE_COMPRESSED)
+    foreach(SVARIANT ${SVARIANT_S})
+        string(TOUPPER ${SVARIANT} SVARIANT_UPPER)
+        string(TOLOWER ${SVARIANT} SVARIANT_LOWER)
+        add_subdirectory(pikex_compressed/${SVARIANT})
+    endforeach()
+endif()

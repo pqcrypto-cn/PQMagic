@@ -1,0 +1,4 @@
+#define NWORDS_FIELD 26
+#define NWORDS_ORDER 24
+#define BITS 1534
+#define FP_NBYTES 192
